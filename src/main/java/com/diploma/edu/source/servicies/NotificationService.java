@@ -1,0 +1,63 @@
+package com.diploma.edu.source.servicies;
+
+import com.diploma.edu.source.db.access.OracleDbAccess;
+import com.diploma.edu.source.model.Notification;
+import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
+import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
+
+@org.springframework.stereotype.Service
+public class NotificationService implements Service<Notification> {
+
+    private final OracleDbAccess oracleDbAccess;
+
+    @Autowired
+    public NotificationService(OracleDbAccess oracleDbAccess) {
+        this.oracleDbAccess = oracleDbAccess;
+    }
+
+    @Override
+    public Notification getById(Long id) {
+        return oracleDbAccess.getById(Notification.class, id);
+    }
+
+    @Override
+    public boolean create(Notification object) {
+        if (oracleDbAccess.insert(object) == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        if (oracleDbAccess.delete(Notification.class, id) == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public boolean update(Notification object) {
+        if (oracleDbAccess.update(object) == 1) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public List<String> getAllEmails(){
+        return oracleDbAccess.getEmails();
+    }
+
+    @Override
+    public Page<Notification> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
+        return oracleDbAccess.selectPage(Notification.class, pageable, filter, sort);
+    }
+}
