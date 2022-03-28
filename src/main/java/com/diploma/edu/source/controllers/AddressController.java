@@ -1,6 +1,7 @@
 package com.diploma.edu.source.controllers;
 
 import com.diploma.edu.source.model.Address;
+import com.diploma.edu.source.model.Notification;
 import com.diploma.edu.source.servicies.AddressService;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("address")
 @RestController
@@ -21,30 +23,30 @@ public class AddressController {
     }
 
     @GetMapping
-    public Page<Address> getAll(@RequestParam(value = "page", required = false) Integer page,
-                                @RequestParam(value = "size", required = false) Integer size,
-                                @RequestParam(value = "flat", required = false) String flat,
-                                @RequestParam(value = "building", required = false) String building,
-                                @RequestParam(value = "user", required = false) String user,
-                                @RequestParam(value = "sort", required = false) String sort) {
-        List<SearchCriteria> filters = new ArrayList<>();
-        Pageable pageable = null;
-        if (page == null && size != null) {
-            pageable = PageRequest.of(0, size);
-        }
-        if (page != null && size != null) {
-            pageable = PageRequest.of(page, size);
-        }
-        if (flat != null) {
-            filters.add(new SearchCriteria("flat", flat));
-        }
-        if (building != null) {
-            filters.add(new SearchCriteria("building",building));
-        }
-        if (user != null) {
-            filters.add(new SearchCriteria("user",user));
-        }
-        return service.getAll(pageable, filters, new SortCriteria(sort));
+    public Page<Address> getAll(@RequestParam Map<String, String> params) {
+
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        Pageable pageable = null;
+//        if (page == null && size != null) {
+//            pageable = PageRequest.of(0, size);
+//        }
+//        if (page != null && size != null) {
+//            pageable = PageRequest.of(page, size);
+//        }
+//        if (flat != null) {
+//            filters.add(new SearchCriteria("flat", flat));
+//        }
+//        if (building != null) {
+//            filters.add(new SearchCriteria("building",building));
+//        }
+//        if (user != null) {
+//            filters.add(new SearchCriteria("user",user));
+//        }
+        //return service.getAll(pageable, filters, new SortCriteria(sort));
+
+        return service.getAll(GetRequestParams.getPageable(params),
+                GetRequestParams.getFilters(params),
+                GetRequestParams.getSortCriteria(params));
     }
 
     @GetMapping("{id}")

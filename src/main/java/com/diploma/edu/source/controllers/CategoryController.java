@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("category")
 @RestController
@@ -24,22 +25,24 @@ public class CategoryController {
     }
 
     @GetMapping
-    public Page<Category> getAll(@RequestParam(value = "page", required = false) Integer page,
-                                      @RequestParam(value = "size", required = false) Integer size,
-                                      @RequestParam(value = "number", required = false) String number,
-                                      @RequestParam(value = "sort", required = false) String sort) {
-        List<SearchCriteria> filters = new ArrayList<>();
-        Pageable pageable = null;
-        if (page == null && size != null) {
-            pageable = PageRequest.of(0, size);
-        }
-        if (page != null && size != null) {
-            pageable = PageRequest.of(page, size);
-        }
-        if (number != null) {
-            filters.add(new SearchCriteria("number", number));
-        }
-        return service.getAll(pageable, filters, new SortCriteria(sort));
+    public Page<Category> getAll(@RequestParam Map<String, String> params) {
+
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        Pageable pageable = null;
+//        if (page == null && size != null) {
+//            pageable = PageRequest.of(0, size);
+//        }
+//        if (page != null && size != null) {
+//            pageable = PageRequest.of(page, size);
+//        }
+//        if (number != null) {
+//            filters.add(new SearchCriteria("number", number));
+//        }
+//        return service.getAll(pageable, filters, new SortCriteria(sort));
+
+        return service.getAll(GetRequestParams.getPageable(params),
+                GetRequestParams.getFilters(params),
+                GetRequestParams.getSortCriteria(params));
     }
 
     @GetMapping("/get-one/{id}")

@@ -3,6 +3,7 @@ package com.diploma.edu.source.controllers;
 import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.model.Logger;
+import com.diploma.edu.source.model.Notification;
 import com.lowagie.text.DocumentException;
 import com.diploma.edu.source.servicies.EntranceService;
 import com.diploma.edu.source.servicies.ExportPDFService;
@@ -21,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Если запрос подразумевает фильтр, то строковые переменные типа имени надо привети к виду "like '%"+name+"%'" иначе не сработает
@@ -77,38 +79,38 @@ public class EntranceController {
     }
 
     @GetMapping
-    public Page<Entrance> getAll(@RequestParam(value = "page", required = false) Integer page,
-                                 @RequestParam(value = "size", required = false) Integer size,
-                                 @RequestParam(value = "typeId", required = false) String typeId,
-                                 @RequestParam(value = "name", required = false) String name,
-                                 @RequestParam(value = "buildingId", required = false) String buildingId,
-                                 @RequestParam(value = "isActive", required = false) String isActive,
-                                 @RequestParam(value = "status", required = false) String status,
-                                 @RequestParam(value = "sort", required = false) String sort) {
-        List<SearchCriteria> filters = new ArrayList<>();
-        Pageable pageable = null;
-        if (page == null && size != null) {
-            pageable = PageRequest.of(0, size);
-        }
-        if (page != null && size != null) {
-            pageable = PageRequest.of(page, size);
-        }
-        if (typeId != null) {
-            filters.add(new SearchCriteria("typeId", typeId));
-        }
-        if (name != null) {
-            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
-        }
-        if (buildingId != null) {
-            filters.add(new SearchCriteria("buildingId", "like '%" + buildingId + "%' "));
-        }
-        if (isActive != null) {
-            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
-        }
-        if (status != null) {
-            filters.add(new SearchCriteria("status", "like '%" + status + "%' "));
-        }
-        Page<Entrance> page1 = service.getAll(pageable, filters, new SortCriteria(sort));
+    public Page<Entrance> getAll(@RequestParam Map<String, String> params) {
+
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        Pageable pageable = null;
+//        if (page == null && size != null) {
+//            pageable = PageRequest.of(0, size);
+//        }
+//        if (page != null && size != null) {
+//            pageable = PageRequest.of(page, size);
+//        }
+//        if (typeId != null) {
+//            filters.add(new SearchCriteria("typeId", typeId));
+//        }
+//        if (name != null) {
+//            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
+//        }
+//        if (buildingId != null) {
+//            filters.add(new SearchCriteria("buildingId", "like '%" + buildingId + "%' "));
+//        }
+//        if (isActive != null) {
+//            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
+//        }
+//        if (status != null) {
+//            filters.add(new SearchCriteria("status", "like '%" + status + "%' "));
+//        }
+//        Page<Entrance> page1 = service.getAll(pageable, filters, new SortCriteria(sort));
+//        return page1;
+
+        Page<Entrance> page1 = service.getAll(GetRequestParams.getPageable(params),
+                GetRequestParams.getFilters(params),
+                GetRequestParams.getSortCriteria(params));
+
         return page1;
     }
 
@@ -132,11 +134,11 @@ public class EntranceController {
 
         List<SearchCriteria> filters = new ArrayList<>();
         if (dateFrom != null) {
-            filters.add(new SearchCriteria("date", " > to_date('" + changeDateFormat(new Date(dateFrom))
+            filters.add(new SearchCriteria("dateAndTime", " > to_date('" + changeDateFormat(new Date(dateFrom))
                     + "', 'yyyy-mm-dd hh24:mi:ss')"));
         }
         if (dateTo != null) {
-            filters.add(new SearchCriteria("date", " < to_date('" + changeDateFormat(new Date(dateTo))
+            filters.add(new SearchCriteria("dateAndTime", " < to_date('" + changeDateFormat(new Date(dateTo))
                     + "', 'yyyy-mm-dd hh24:mi:ss')"));
         }
         response.setContentType("application/pdf");

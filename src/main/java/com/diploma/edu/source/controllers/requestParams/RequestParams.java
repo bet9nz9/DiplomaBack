@@ -1,8 +1,7 @@
-package com.diploma.edu.source.controllers;
+package com.diploma.edu.source.controllers.requestParams;
 
 public enum RequestParams {
 
-    PAGE("page"), SIZE("size"), SORT("sort"),
     DATE("dateAndTime"), TEXT("text"), DATE_FROM("dateFrom"),
     DATE_TO("dateTo"), NAME("name"), TITLE("title"),
     CATEGORY_ID("categoryId"), CREATED_BY("createdBy"), FLAT("flat"),
@@ -14,7 +13,7 @@ public enum RequestParams {
     BANK_BOOK("bankBook"), CURRENT_MONTH_READING("currentMonthReading"),
     LAST_MONTH_READING("lastMonthReading"), SERVICE("service");
 
-    private String requestParam;
+    private final String requestParam;
 
     RequestParams(String requestParam){
         this.requestParam = requestParam;

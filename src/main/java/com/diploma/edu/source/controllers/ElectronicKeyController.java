@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("keys")
 @RestController
@@ -21,34 +22,33 @@ public class ElectronicKeyController {
     }
 
     @GetMapping
-    public Page<Ekey> getAll(@RequestParam(value = "page", required = false) Integer page,
-                             @RequestParam(value = "size", required = false) Integer size,
-                             @RequestParam(value = "keyCode", required = false) String keyCode,
-                             @RequestParam(value = "name", required = false) String name,
-                             @RequestParam(value = "isActive", required = false) String isActive,
-                             @RequestParam(value = "userId", required = false) String userId,
-                             @RequestParam(value = "sort", required = false) String sort) {
-        List<SearchCriteria> filters = new ArrayList<>();
-        Pageable pageable = null;
-        if (page == null && size != null) {
-            pageable = PageRequest.of(0, size);
-        }
-        if (page != null && size != null) {
-            pageable = PageRequest.of(page, size);
-        }
-        if (keyCode != null) {
-            filters.add(new SearchCriteria("keyCode", "like '%" + keyCode + "%' "));
-        }
-        if (name != null) {
-            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
-        }
-        if (isActive != null) {
-            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
-        }
-        if (userId != null) {
-            filters.add(new SearchCriteria("user", userId));
-        }
-        return service.getAll(pageable, filters, new SortCriteria(sort));
+    public Page<Ekey> getAll(@RequestParam Map<String, String> params) {
+
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        Pageable pageable = null;
+//        if (page == null && size != null) {
+//            pageable = PageRequest.of(0, size);
+//        }
+//        if (page != null && size != null) {
+//            pageable = PageRequest.of(page, size);
+//        }
+//        if (keyCode != null) {
+//            filters.add(new SearchCriteria("keyCode", "like '%" + keyCode + "%' "));
+//        }
+//        if (name != null) {
+//            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
+//        }
+//        if (isActive != null) {
+//            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
+//        }
+//        if (userId != null) {
+//            filters.add(new SearchCriteria("user", userId));
+//        }
+//        return service.getAll(pageable, filters, new SortCriteria(sort));
+
+        return service.getAll(GetRequestParams.getPageable(params),
+                GetRequestParams.getFilters(params),
+                GetRequestParams.getSortCriteria(params));
     }
 
     @PostMapping("/add")

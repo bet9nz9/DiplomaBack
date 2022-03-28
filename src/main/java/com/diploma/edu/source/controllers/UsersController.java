@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("users")
@@ -25,46 +26,42 @@ public class UsersController {
     }
 
     @GetMapping
-    public Page<User> getAll(@RequestParam(value = "page", required = false) Integer page,
-                             @RequestParam(value = "size", required = false) Integer size,
-                             @RequestParam(value = "email", required = false) String email,
-                             @RequestParam(value = "firstName", required = false) String firstName,
-                             @RequestParam(value = "lastName", required = false) String lastName,
-                             @RequestParam(value = "patronymic", required = false) String patronymic,
-                             @RequestParam(value = "isActive", required = false) String isActive,
-                             @RequestParam(value = "receiveUtilityNotification", required = false) String receiveUtilityNotification,
-                             @RequestParam(value = "roleID", required = false) String roleID,
-                             @RequestParam(value = "sort", required = false) String sort) {
-        List<SearchCriteria> filters = new ArrayList<>();
-        Pageable pageable = null;
-        if (page == null && size != null) {
-            pageable = PageRequest.of(0, size);
-        }
-        if (page != null && size != null) {
-            pageable = PageRequest.of(page, size);
-        }
-        if (email != null) {
-            filters.add(new SearchCriteria("email", "like '%" + email + "%' "));
-        }
-        if (firstName != null) {
-            filters.add(new SearchCriteria("firstName", "like '%" + firstName + "%' "));
-        }
-        if (lastName != null) {
-            filters.add(new SearchCriteria("lastName", "like '%" + lastName + "%' "));
-        }
-        if (patronymic != null) {
-            filters.add(new SearchCriteria("patronymic", "like '%" + patronymic + "%' "));
-        }
-        if (isActive != null) {
-            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
-        }
-        if (receiveUtilityNotification != null) {
-            filters.add(new SearchCriteria("receiveUtilityNotification", "like '%" + receiveUtilityNotification + "%' "));
-        }
-        if (roleID != null) {
-            filters.add(new SearchCriteria("roleID", roleID));
-        }
-        return service.getAll(pageable, filters, new SortCriteria(sort));
+    public Page<User> getAll(@RequestParam Map<String, String> params) {
+
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        Pageable pageable = null;
+//        if (page == null && size != null) {
+//            pageable = PageRequest.of(0, size);
+//        }
+//        if (page != null && size != null) {
+//            pageable = PageRequest.of(page, size);
+//        }
+//        if (email != null) {
+//            filters.add(new SearchCriteria("email", "like '%" + email + "%' "));
+//        }
+//        if (firstName != null) {
+//            filters.add(new SearchCriteria("firstName", "like '%" + firstName + "%' "));
+//        }
+//        if (lastName != null) {
+//            filters.add(new SearchCriteria("lastName", "like '%" + lastName + "%' "));
+//        }
+//        if (patronymic != null) {
+//            filters.add(new SearchCriteria("patronymic", "like '%" + patronymic + "%' "));
+//        }
+//        if (isActive != null) {
+//            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
+//        }
+//        if (receiveUtilityNotification != null) {
+//            filters.add(new SearchCriteria("receiveUtilityNotification", "like '%" + receiveUtilityNotification + "%' "));
+//        }
+//        if (roleID != null) {
+//            filters.add(new SearchCriteria("roleID", roleID));
+//        }
+//        return service.getAll(pageable, filters, new SortCriteria(sort));
+
+        return service.getAll(GetRequestParams.getPageable(params),
+                GetRequestParams.getFilters(params),
+                GetRequestParams.getSortCriteria(params));
     }
 
     @PostMapping("/add")
