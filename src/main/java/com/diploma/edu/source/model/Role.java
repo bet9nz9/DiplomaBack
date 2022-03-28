@@ -4,7 +4,7 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
-@ObjectType(id = 6)
+@ObjectType(id = 5)
 public class Role extends BaseEntity {
 
 	@Attribute(id = 14, valueType = ValueType.VALUE)

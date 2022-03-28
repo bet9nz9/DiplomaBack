@@ -4,7 +4,7 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
-@ObjectType(id = 12)
+@ObjectType(id = 10)
 public class ContactType extends BaseEntity {
     @Attribute(id = 51, valueType = ValueType.VALUE)
     private String contactType;

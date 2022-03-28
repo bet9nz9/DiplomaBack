@@ -4,17 +4,17 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
-@ObjectType(id = 7)
+@ObjectType(id = 6)
 public class Building extends BaseEntity {
 
     @Attribute(id = 15, valueType = ValueType.VALUE)
-    protected String number;
+    protected String buildingNumber;
 
-    public String getNumber() {
-        return number;
+    public String getBuildingNumber() {
+        return buildingNumber;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setBuildingNumber(String buildingNumber) {
+        this.buildingNumber = buildingNumber;
     }
 }

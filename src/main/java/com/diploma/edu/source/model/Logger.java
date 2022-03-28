@@ -17,7 +17,7 @@ public class Logger extends BaseEntity {
 	protected Ekey eKey;
 
 	@Attribute(id = 3, valueType = ValueType.DATE_VALUE)
-	protected Date date;
+	protected Date dateAndTime;
 
 	@Attribute(id = 4, valueType = ValueType.DATE_VALUE)
 	protected String time;
@@ -38,12 +38,12 @@ public class Logger extends BaseEntity {
 		this.eKey = eKey;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getDateAndTime() {
+		return dateAndTime;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDateAndTime(Date dateAndTime) {
+		this.dateAndTime = dateAndTime;
 	}
 
 	public String getTime() {

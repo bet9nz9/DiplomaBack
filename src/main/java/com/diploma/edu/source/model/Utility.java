@@ -6,14 +6,14 @@ import com.diploma.edu.source.db.annotations.ValueType;
 
 import java.util.Date;
 
-@ObjectType(id = 14)
+@ObjectType(id = 12)
 public class Utility extends BaseEntity{
 
     @Attribute(id = 37, valueType = ValueType.VALUE)
     private String bankBook;
 
     @Attribute(id = 38, valueType = ValueType.DATE_VALUE)
-    private Date date;
+    private Date dateAndTime;
 
     @Attribute(id = 47 ,valueType = ValueType.VALUE)
     private Integer startMonthReading;
@@ -44,12 +44,12 @@ public class Utility extends BaseEntity{
         this.bankBook = bankBook;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateAndTime() {
+        return dateAndTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateAndTime(Date dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public Integer getEndMonthReading() {

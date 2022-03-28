@@ -4,7 +4,7 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
-@ObjectType(id = 8)
+@ObjectType(id = 7)
 public class Address extends BaseEntity {
 
     @Attribute(id = 17, valueType = ValueType.VALUE)
@@ -17,7 +17,7 @@ public class Address extends BaseEntity {
     private Building building;
 
     @Attribute(id = 48, clazz = User.class)
-    private User user;
+    private User referencedUser;
 
     public String getFlat() {
         return flat;
@@ -35,12 +35,12 @@ public class Address extends BaseEntity {
         this.building = building;
     }
 
-    public User getUser() {
-        return user;
+    public User getReferencedUser() {
+        return referencedUser;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setReferencedUser(User referencedUser) {
+        this.referencedUser = referencedUser;
     }
 
     public Integer getApartmentNumber() {

@@ -6,14 +6,14 @@ import com.diploma.edu.source.db.annotations.ValueType;
 import java.util.Date;
 
 
-@ObjectType(id = 13)
+@ObjectType(id = 11)
 public class Notification extends BaseEntity {
 
     @Attribute(id = 32, valueType = ValueType.VALUE)
     private String text;
 
     @Attribute(id = 33, valueType = ValueType.DATE_VALUE)
-    private Date date;
+    private Date dateAndTime;
 
     @Attribute(id = 34, valueType = ValueType.VALUE)
     private String title;
@@ -32,12 +32,12 @@ public class Notification extends BaseEntity {
         this.text = text;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getDateAndTime() {
+        return dateAndTime;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setDateAndTime(Date dateAndTime) {
+        this.dateAndTime = dateAndTime;
     }
 
     public String getTitle() {

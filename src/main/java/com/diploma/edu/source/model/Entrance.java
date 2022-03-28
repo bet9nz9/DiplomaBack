@@ -8,7 +8,7 @@ import com.diploma.edu.source.db.annotations.ValueType;
 public class Entrance extends BaseEntity {
 
     @Attribute(id = 5, clazz = Type.class)
-    protected Type type;
+    protected Type entranceType;
 
     @Attribute(id = 7, clazz = Building.class)
     protected Building building;
@@ -27,12 +27,12 @@ public class Entrance extends BaseEntity {
         this.status = status;
     }
 
-    public Type getType() {
-        return type;
+    public Type getEntranceType() {
+        return entranceType;
     }
 
-    public void setType(Type type) {
-        this.type = type;
+    public void setEntranceType(Type entranceType) {
+        this.entranceType = entranceType;
     }
 
     public Building getBuilding() {

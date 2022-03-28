@@ -4,7 +4,7 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
-@ObjectType(id = 10)
+@ObjectType(id = 8)
 public class User extends BaseEntity {
 
     @Attribute(id = 21, valueType = ValueType.VALUE)
@@ -22,10 +22,10 @@ public class User extends BaseEntity {
     @Attribute(id = 25, valueType = ValueType.VALUE)
     private String patronymic;
 
-    @Attribute(id = 26, valueType = ValueType.VALUE)
+    @Attribute(id = 26, valueType = ValueType.LIST_VALUE)
     private Boolean isActive;
 
-    @Attribute(id = 27, valueType = ValueType.VALUE)
+    @Attribute(id = 27, valueType = ValueType.LIST_VALUE)
     private Boolean receiveUtilityNotification;
 
     @Attribute(id = 28, clazz = Role.class)
