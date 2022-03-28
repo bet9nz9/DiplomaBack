@@ -18,7 +18,7 @@ public class RequestGetByID extends RequestBuilder {
     @Override
     public void buildFilterBlock() {
         request.setFilterBlock(new StringBuilder(
-                request.getFilterBlock() + " AND \"id\" = " + id + " "
+                request.getFilterBlock() + " AND id = " + id + " "
         ));
     }
 }

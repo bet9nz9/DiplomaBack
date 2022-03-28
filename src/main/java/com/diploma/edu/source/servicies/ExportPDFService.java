@@ -52,11 +52,11 @@ public class ExportPDFService {
 
     private void writeTableData(PdfPTable table){
         for(Logger logger : loggerList){
-            table.addCell(logger.geteKeyId().getUser().getPatronymic());
+            table.addCell(logger.geteKeyId().getReferencedUser().getPatronymic());
             table.addCell(logger.geteKeyId().getKeyCode());
             table.addCell(logger.getEntranceId().getName());
 
-            Date date = logger.getDate();
+            Date date = logger.getDateAndTime();
             SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, y", Locale.ENGLISH);
             DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
             table.addCell(dateFormat.format(date));

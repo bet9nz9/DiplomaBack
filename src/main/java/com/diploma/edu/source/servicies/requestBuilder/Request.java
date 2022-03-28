@@ -14,17 +14,32 @@ public class Request {
 
     protected List<Attr> attributes;
 
-    StringBuilder selectBlock = new StringBuilder("\nSELECT * FROM ( SELECT o.object_id \"id\",\n listagg(o.name) \"name\",\n listagg(o.description) \"description\" ");
+    StringBuilder selectBlock = new StringBuilder("\nSELECT * FROM ( SELECT o.object_id id,\n o.name name,\n o.description description ");
     StringBuilder fromBlock = new StringBuilder("\nFROM OBJECTS o \n");
     StringBuilder whereBlock;
     StringBuilder filterBlock = new StringBuilder(") WHERE 1=1");
 
     public Request(Class clazz) {
-        whereBlock = new StringBuilder("WHERE o.object_type_id = " + Processor.getObjtypeId(clazz) + "\n")
-                .append(" group by o.object_id \n");
+        whereBlock = new StringBuilder("WHERE o.object_type_id = " + Processor.getObjtypeId(clazz) + "\n");
         attributes = Processor.getAttributes(clazz);
 
-        for (int i = 0; i < attributes.size(); i++) {
+        for (Attr attr : attributes) {
+//            if (attr.valueType.equals(ValueType.LIST_VALUE)){
+//                selectBlock.append(",\n"+ attr.field.getName() + ".LIST_VALUE_ID ")
+//                .append(attr.field.getName());
+//            }
+
+            if (!attr.valueType.equals(ValueType.BASE_VALUE)){
+                selectBlock.append(",\n" + attr.field.getName() + ".")
+                        .append(attr.valueType.getValueType() + " " + attr.field.getName());
+
+                fromBlock.append("left join " + attr.valueType.getTable()+ " " + attr.field.getName() + "\n")
+                        .append("on o.object_id = " + attr.field.getName() + ".object_id and ")
+                        .append(attr.field.getName() + ".attr_id = " + attr.id + "\n");
+            }
+        }
+
+        /*for (int i = 0; i < attributes.size(); i++) {
             if (attributes.get(i).valueType == ValueType.BASE_VALUE
                     || attributes.get(i).valueType == ValueType.LIST_VALUE) {
                 continue;
@@ -41,7 +56,7 @@ public class Request {
 
             fromBlock.append("left join " + attributes.get(i).valueType.getTable() + " a" + i + " ")
                     .append("on o.object_id = a" + i + ".object_id and a" + i + ".attr_id = " + attributes.get(i).id + " \n");
-        }
+        }*/
     }
 
     public StringBuilder getSelectBlock() {

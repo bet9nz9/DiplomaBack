@@ -18,7 +18,7 @@ public class RequestWithPaging extends RequestBuilder {
             sort = new SortCriteria("id", "ASC");
         }
         request.setSelectBlock(new StringBuilder(
-                "select * from (select row_number() over (order by \"" + sort.getProperty() + "\"" +
+                "select * from (select row_number() over (order by " + sort.getProperty() + " " +
                         sort.getDirection() + ") rowRank, a.* from(" + request.getSelectBlock()
         ));
     }
@@ -29,7 +29,7 @@ public class RequestWithPaging extends RequestBuilder {
             if (criteria.getKey().equals("month")){
                 request.filterBlock.append(" AND to_date(to_char(\"date\", 'MM yyyy'),'MM yyyy') = to_date('" + criteria.getValue() + "', 'yyyy MM') ");
             }else {
-                request.filterBlock.append(" AND \"" + criteria.getKey() + "\" " + criteria.getValue() + " ");
+                request.filterBlock.append(" AND " + criteria.getKey() + " " + criteria.getValue() + " ");
             }
         }
         request.setFilterBlock(new StringBuilder(

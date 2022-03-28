@@ -22,7 +22,7 @@ public class CountElementsRequest extends RequestBuilder {
             if (criteria.getKey().equals("month")){
                 request.filterBlock.append(" AND to_date(to_char(\"date\", 'MM yyyy'),'MM yyyy') = to_date('" + criteria.getValue() + "', 'yyyy MM') ");
             }else {
-                request.filterBlock.append(" AND \"" + criteria.getKey() + "\" " + criteria.getValue() + " ");
+                request.filterBlock.append(" AND " + criteria.getKey() + " " + criteria.getValue() + " ");
             }
         }
     }

@@ -11,6 +11,8 @@ import com.diploma.edu.source.servicies.requestBuilder.Request;
 import com.diploma.edu.source.servicies.requestBuilder.RequestGetByID;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
+import com.diploma.edu.source.servicies.requestBuilder.mappers.*;
+import lombok.SneakyThrows;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +25,11 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -178,42 +182,25 @@ public class OracleDbAccess implements DbAccess {
         logger.log(Level.INFO, "Request: " + request);
         List<Attr> attributes = Processor.getAttributes(clazz);
         List<T> list = jdbcTemplate.query(request, new RowMapper<T>() {
+            @SneakyThrows
+            @Override
             public T mapRow(ResultSet rs, int rowNum) throws SQLException {
-                T obj = null;
-                try {
-                    obj = clazz.getDeclaredConstructor().newInstance();
-                    for (int i = 0; i < attributes.size(); i++) {
-                        attributes.get(i).field.setAccessible(true);
-                        if (attributes.get(i).valueType == ValueType.LIST_VALUE) {
-                            attributes.get(i).field.set(obj, getListForObjectAttribute(attributes.get(i),
-                                    rs.getLong("id")));
-                        } else if (attributes.get(i).valueType == ValueType.REF_VALUE) {
-                            List<Long> referencesId = getListForObjectAttribute(attributes.get(i), rs.getLong("id"));
-                            List<BaseEntity> references = new ArrayList<>();
-                            for (int j = 0; j < referencesId.size(); j++) {
-                                references.add(getById(attributes.get(i).clazz, referencesId.get(j)));
-                            }
-                            if (references.size() <= 0) {
-                                attributes.get(i).field.set(obj, null);
-                            } else {
-                                attributes.get(i).field.set(obj, references.get(0));
-                            }
-
-                        } else {
-                            attributes.get(i).field.set(obj, rs.getObject((attributes.get(i).field.getName()),
-                                    attributes.get(i).field.getType()));
-                        }
+                T object = clazz.getDeclaredConstructor().newInstance();
+                for (Attr attr : attributes) {
+                    attr.field.setAccessible(true);
+                    Object value = rs.getObject(attr.field.getName());
+                    if (attr.valueType.equals(ValueType.LIST_VALUE)) {
+                        new MapperDirector(new BooleanValueMapper(attr)).mapObjectAttribute(object, getListValueById(value));
+                    } else if (attr.valueType.equals(ValueType.REF_VALUE)) {
+                        Long referencedObjId = getReferencedObjectId(rs.getObject("id"), attr.id);
+                        new MapperDirector(new ReferenceMapper(attr)).mapObjectAttribute(object, getById(attr.clazz, referencedObjId));
+                    } else if (attr.valueType.equals(ValueType.DATE_VALUE)) {
+                        new MapperDirector(new DateValueMapper(attr)).mapObjectAttribute(object, value);
+                    } else {
+                        new MapperDirector(new AttributeMapper(attr)).mapObjectAttribute(object, value);
                     }
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
                 }
-                return obj;
+                return object;
             }
         });
         return list;
@@ -229,7 +216,7 @@ public class OracleDbAccess implements DbAccess {
         List<T> result = selectAll(clazz, Director.valueOf(clazz).
                 getRequest(new RequestGetByID(new Request(clazz), id)).
                 buildRequest());
-        if (result.size() <= 0) {
+        if (result.isEmpty()) {
             return null;
         }
         return result.get(0);
@@ -244,13 +231,23 @@ public class OracleDbAccess implements DbAccess {
         return list.get(0);
     }
 
+    private Long getReferencedObjectId(Object objectId, Object attrId) {
+        String request = MessageFormat.format("SELECT reference FROM OBJREFERENCE WHERE attr_id = {0} and object_id = {1}", attrId, objectId);
+        return jdbcTemplate.queryForObject(request, Long.class);
+    }
+
+    private String getListValueById(Object listValueId){
+        String request = MessageFormat.format("SELECT VALUE FROM LISTS WHERE LIST_VALUE_ID = {0}", listValueId);
+        return jdbcTemplate.queryForObject(request, String.class);
+    }
+
     private List<Long> getListForObjectAttribute(Attr attr, Long objectId) {
         String sql = "SELECT reference \"id\" FROM objreference WHERE attr_id = " + attr.id +
                 " AND object_id = " + objectId;
         return jdbcTemplate.queryForList(sql, Long.class);
     }
 
-    public List<String> getEmails(){
+    public List<String> getEmails() {
         String sql = "SELECT * FROM ( SELECT\n" +
                 "                       listagg(a0.VALUE) \"email\"\n" +
                 "                FROM OBJECTS o\n" +
@@ -259,11 +256,11 @@ public class OracleDbAccess implements DbAccess {
                 "                group by o.object_id\n" +
                 "              ) WHERE 1=1";
 
-        return jdbcTemplate.queryForList(sql,String.class);
+        return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public List<Notification> getAllNotesById(int categoryId){
-        String sql ="SELECT * FROM ( SELECT o.object_id \"id\",\n" +
+    public List<Notification> getAllNotesById(int categoryId) {
+        String sql = "SELECT * FROM ( SELECT o.object_id \"id\",\n" +
                 "                       listagg(o.name) \"name\",\n" +
                 "                       listagg(o.description) \"description\" ,\n" +
                 "                       listagg(a0.VALUE) \"text\",\n" +
@@ -280,7 +277,7 @@ public class OracleDbAccess implements DbAccess {
                 "                WHERE o.object_type_id = 13\n" +
                 "                group by o.object_id\n" +
                 "              ) where \"category\" = " + categoryId + "";
-        return jdbcTemplate.queryForList(sql,Notification.class);
+        return jdbcTemplate.queryForList(sql, Notification.class);
     }
 
     private String getInsertStatement(Attr attr, Long objectId, Object value) {

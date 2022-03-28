@@ -1,4 +1,17 @@
 package com.diploma.edu.source.servicies.requestBuilder.mappers;
 
-public class DateValueMappes {
+import com.diploma.edu.source.db.annotations.Attr;
+
+import java.util.Date;
+
+public class DateValueMapper extends AttributeMapper {
+
+    public DateValueMapper(Attr attribute) {
+        super(attribute);
+    }
+
+    @Override
+    public void mapAttribute(Object object, Object value) throws IllegalAccessException {
+        attribute.field.set(object, new Date((Long) value));
+    }
 }
