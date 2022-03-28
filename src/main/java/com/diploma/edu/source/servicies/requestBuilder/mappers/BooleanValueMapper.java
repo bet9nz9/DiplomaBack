@@ -10,6 +10,10 @@ public class BooleanValueMapper extends AttributeMapper {
 
     @Override
     public void mapAttribute(Object object, Object value) throws IllegalAccessException {
-        attribute.field.set(object, new Boolean(value.toString()));
+        if (value == null) {
+            attribute.field.set(object, null);
+        } else {
+            attribute.field.set(object, new Boolean(value.toString()));
+        }
     }
 }

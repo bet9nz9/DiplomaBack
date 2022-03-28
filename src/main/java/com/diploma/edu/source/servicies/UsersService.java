@@ -34,7 +34,7 @@ public class UsersService implements Service<User> {
 
     @Override
     public boolean create(User object) {
-        object.setRole(roleService.getById(421L));
+        object.setRole(roleService.getById(8L));
         object.setPassword(passwordEncoder.encode(object.getPassword()));
         if (oracleDbAccess.insert(object) == 1) {
             return false;
@@ -79,8 +79,10 @@ public class UsersService implements Service<User> {
         List<SearchCriteria> filter = new ArrayList<>();
         filter.add(new SearchCriteria("activationCode", " = '" + code + "' "));
 
-        if(oracleDbAccess.selectPage(User.class, null, filter, null).getContent().size() != 0){
-            return oracleDbAccess.selectPage(User.class, null, filter, null).getContent().get(0);
+        List<User> users = oracleDbAccess.selectPage(User.class, null, filter, null).getContent();
+
+        if(!users.isEmpty()){
+            return users.get(0);
         }else {
             return null;
         }
@@ -90,7 +92,7 @@ public class UsersService implements Service<User> {
         User user = findByActivatedCode(code);
 
         if(user != null){
-            user.setActivationCode(code);
+            user.setActivationCode(null);
             update(user);
             return true;
         }
@@ -100,10 +102,8 @@ public class UsersService implements Service<User> {
 
     public User findByLoginAndPass(String login, String password)  {
         User user = findUserByEmail(login);
-        if (user != null) {
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                return user;
-            }
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
         }
         throw new ResourceNotFoundException();
     }

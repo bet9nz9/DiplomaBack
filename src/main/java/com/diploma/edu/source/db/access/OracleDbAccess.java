@@ -5,10 +5,7 @@ import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
 import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.model.Notification;
-import com.diploma.edu.source.servicies.requestBuilder.CountElementsRequest;
-import com.diploma.edu.source.servicies.requestBuilder.Director;
-import com.diploma.edu.source.servicies.requestBuilder.Request;
-import com.diploma.edu.source.servicies.requestBuilder.RequestGetByID;
+import com.diploma.edu.source.servicies.requestBuilder.*;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.mappers.*;
@@ -79,56 +76,44 @@ public class OracleDbAccess implements DbAccess {
     }
 
     @Override
+    @SneakyThrows
     public <T extends BaseEntity> int insert(T obj) {
+        obj.setId(jdbcTemplate.queryForObject("select OBJECTS_SEQ.NEXTVAL from dual ", Long.class));
 
-        Long id = jdbcTemplate.queryForList("select OBJECTS_SEQ.NEXTVAL from dual ", Long.class).get(0);
+        List<String> statements = new InsertRequestBuilder<T>().getInsertStatements(obj);
 
-//        Long objId = obj.getId();
-//        if (!isUnique(objId)) {
-//            return -1;
-//        }
-
-        ArrayList<String> statements = new ArrayList<>();
-        try {
-            List<Attr> attributes = Processor.getAttributes(obj.getClass());
-            statements.add("\nINSERT INTO OBJECTS (object_id, name, description, object_type_id) VALUES ('"
-                    + id + "', '" + obj.getName() + "', '" + obj.getDescription() + "', '"
-                    + Processor.getObjtypeId(obj.getClass()) + "')");
-
-            for (int i = 0; i < attributes.size(); i++) {
-                attributes.get(i).field.setAccessible(true);
-                if (attributes.get(i).valueType == ValueType.BASE_VALUE) {
-                    continue;
-                }
-                if (attributes.get(i).valueType == ValueType.LIST_VALUE) {
-                    List<Long> list = (List<Long>) attributes.get(i).field.get(obj);
-                    for (int j = 0; j < list.size(); j++) {
-                        statements.add(getInsertStatement(attributes.get(i), id, list.get(j)));
-                    }
-                } else {
-                    statements.add(getInsertStatement(attributes.get(i), id, attributes.get(i).field.get(obj)));
-                    if (attributes.get(i).valueType.getTable() == "OBJREFERENCE") {
-                        statements.add(getOBJREFStatement(attributes.get(i), id, attributes.get(i).field.get(obj)));
-                    }
-                }
-            }
-        } catch (IllegalAccessException e) {
-            logger.log(Level.WARN, e);
-            e.printStackTrace();
-            return 1;
-        }
         String[] str = new String[0];
-
-        for (int i = 0; i < statements.size(); i++) {
-            if (statements.get(i) == null) {
-                statements.remove(i);
-            }
-        }
 
         logger.log(Level.INFO, "Insert statements");
 
         jdbcTemplate.batchUpdate(statements.toArray(str));
         return 0;
+    }
+
+    private String getInsertStatement(Attr attr, Long objectId, Object value) {
+        String newValue = "'" + value + "'";
+        if (value == null) {
+            newValue = null;
+            if (attr.valueType.getTable() == "OBJREFERENCE") {
+                return null;
+            }
+        }
+        if (attr.valueType.getTable() == "OBJREFERENCE") {
+            BaseEntity baseEntity = (BaseEntity) value;
+            return "\nINSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE) VALUES" + " (" + attr.id + ", " + objectId + ", "
+                    + baseEntity.getId().toString() + ")";
+        }
+        if (attr.valueType.getValueType().equals("DATE_VALUE")) {
+            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            newValue = dateFormat.format(value);
+            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
+                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", (TO_DATE('"
+                    + newValue + "', 'yyyy-mm-dd hh24:mi:ss')))";
+        } else {
+            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
+                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", "
+                    + newValue + ")";
+        }
     }
 
     private boolean isUnique(Long id) {
@@ -237,14 +222,11 @@ public class OracleDbAccess implements DbAccess {
     }
 
     private String getListValueById(Object listValueId){
+        if (listValueId == null){
+            return null;
+        }
         String request = MessageFormat.format("SELECT VALUE FROM LISTS WHERE LIST_VALUE_ID = {0}", listValueId);
         return jdbcTemplate.queryForObject(request, String.class);
-    }
-
-    private List<Long> getListForObjectAttribute(Attr attr, Long objectId) {
-        String sql = "SELECT reference \"id\" FROM objreference WHERE attr_id = " + attr.id +
-                " AND object_id = " + objectId;
-        return jdbcTemplate.queryForList(sql, Long.class);
     }
 
     public List<String> getEmails() {
@@ -278,38 +260,6 @@ public class OracleDbAccess implements DbAccess {
                 "                group by o.object_id\n" +
                 "              ) where \"category\" = " + categoryId + "";
         return jdbcTemplate.queryForList(sql, Notification.class);
-    }
-
-    private String getInsertStatement(Attr attr, Long objectId, Object value) {
-        String newValue = "'" + value + "'";
-        if (value == null) {
-            newValue = null;
-            if (attr.valueType.getTable() == "OBJREFERENCE") {
-                return null;
-            }
-        }
-        if (attr.valueType.getTable() == "OBJREFERENCE") {
-            BaseEntity baseEntity = (BaseEntity) value;
-            return "\nINSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE) VALUES" + " (" + attr.id + ", " + objectId + ", "
-                    + baseEntity.getId().toString() + ")";
-        }
-        if (attr.valueType.getValueType().equals("DATE_VALUE")) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            newValue = dateFormat.format(value);
-            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
-                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", (TO_DATE('"
-                    + newValue + "', 'yyyy-mm-dd hh24:mi:ss')))";
-        } else {
-            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
-                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", "
-                    + newValue + ")";
-        }
-    }
-
-    private String getOBJREFStatement(Attr attr, Long objectId, Object value) {
-        BaseEntity baseEntity = (BaseEntity) value;
-        return "\nINSERT INTO OBJREFERENCE (ATTR_ID, OBJECT_ID, REFERENCE)" +
-                " VALUES (" + attr.id + ", " + objectId + ", " + baseEntity.getId() + ")";
     }
 
     private String getDeleteStatement(Attr attr, Long objectId) {
