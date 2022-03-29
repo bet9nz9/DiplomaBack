@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,34 +36,6 @@ public class NotificationController {
 
     @GetMapping
     public Page<Notification> getAll(@RequestParam Map<String, String> params) {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        Pageable pageable = null;
-//        if (page == null && size != null) {
-//            pageable = PageRequest.of(0, size);
-//        }
-//        if (page != null && size != null) {
-//            pageable = PageRequest.of(page, size);
-//        }
-//        if (createdBy != null) {
-//            filters.add(new SearchCriteria("createdBy", createdBy));
-//        }
-//        if (date != null) {
-//            filters.add(new SearchCriteria("dateAndTime", changeDateFormat(new Date(date))));
-//        }
-//        if (dateFrom != null) {
-//            filters.add(new SearchCriteria("dateAndTime", " > to_date('" + changeDateFormat(new Date(dateFrom))
-//                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
-//        }
-//        if (name != null) {
-//            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
-//        }
-//        if (title != null) {
-//            filters.add(new SearchCriteria("title", "like '%" + title + "%' "));
-//        }
-//        if (categoryId != null) {
-//            filters.add(new SearchCriteria("category", categoryId));
-//        }
         Page<Notification> page1 = service.getAll(GetRequestParams.getPageable(params),
                 GetRequestParams.getFilters(params),
                 GetRequestParams.getSortCriteria(params));
@@ -71,7 +44,7 @@ public class NotificationController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public boolean deleteNotification(@PathVariable("id") Long id) {
+    public boolean deleteNotification(@PathVariable("id") BigInteger id) {
         return service.delete(id);
     }
 
@@ -87,7 +60,7 @@ public class NotificationController {
     }
 
     @RequestMapping(value = "/get-one/{id}")
-    public Notification getOne(@PathVariable("id") Long id) {
+    public Notification getOne(@PathVariable("id") BigInteger id) {
         return service.getById(id);
     }
 

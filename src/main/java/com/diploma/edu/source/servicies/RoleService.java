@@ -7,6 +7,7 @@ import com.diploma.edu.source.model.Role;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ public class RoleService implements Service<Role> {
     }
 
     @Override
-    public Role getById(Long id) {
+    public Role getById(BigInteger id) {
         return oracleDbAccess.getById(Role.class, id);
     }
 
@@ -33,7 +34,7 @@ public class RoleService implements Service<Role> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(Role.class, id) == 1) {
             return false;
         } else {

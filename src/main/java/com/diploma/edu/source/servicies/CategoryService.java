@@ -7,6 +7,7 @@ import com.diploma.edu.source.model.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ public class CategoryService implements Service<Category> {
     }
 
     @Override
-    public Category getById(Long id) {
+    public Category getById(BigInteger id) {
         return oracleDbAccess.getById(Category.class, id);
     }
 
@@ -31,7 +32,7 @@ public class CategoryService implements Service<Category> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if(oracleDbAccess.delete(Category.class, id) ==1)
             return true;
         else return false;
@@ -49,7 +50,7 @@ public class CategoryService implements Service<Category> {
         return oracleDbAccess.selectPage(Category.class, pageable, filter, sort);
     }
 
-    public boolean getAllNotesById(int id){
+    public boolean getAllNotesById(BigInteger id){
         if(oracleDbAccess.getAllNotesById(id).size()>0)
             return true;
         else return false;

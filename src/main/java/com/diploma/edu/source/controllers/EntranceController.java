@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class EntranceController {
     }
 
     @DeleteMapping(params = {"id"})
-    public boolean deleteEntrance(@RequestParam("id") Long entranceId) {
+    public boolean deleteEntrance(@RequestParam("id") BigInteger entranceId) {
         return service.delete(entranceId);
     }
 
@@ -80,33 +81,6 @@ public class EntranceController {
 
     @GetMapping
     public Page<Entrance> getAll(@RequestParam Map<String, String> params) {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        Pageable pageable = null;
-//        if (page == null && size != null) {
-//            pageable = PageRequest.of(0, size);
-//        }
-//        if (page != null && size != null) {
-//            pageable = PageRequest.of(page, size);
-//        }
-//        if (typeId != null) {
-//            filters.add(new SearchCriteria("typeId", typeId));
-//        }
-//        if (name != null) {
-//            filters.add(new SearchCriteria("name", "like '%" + name + "%' "));
-//        }
-//        if (buildingId != null) {
-//            filters.add(new SearchCriteria("buildingId", "like '%" + buildingId + "%' "));
-//        }
-//        if (isActive != null) {
-//            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
-//        }
-//        if (status != null) {
-//            filters.add(new SearchCriteria("status", "like '%" + status + "%' "));
-//        }
-//        Page<Entrance> page1 = service.getAll(pageable, filters, new SortCriteria(sort));
-//        return page1;
-
         Page<Entrance> page1 = service.getAll(GetRequestParams.getPageable(params),
                 GetRequestParams.getFilters(params),
                 GetRequestParams.getSortCriteria(params));
@@ -122,10 +96,11 @@ public class EntranceController {
     }
 
     @RequestMapping(value = "/get-one/{id}")
-    public Entrance getOne(@PathVariable("id") Long id) {
+    public Entrance getOne(@PathVariable("id") BigInteger id) {
         return service.getById(id);
     }
 
+    //TODO: поменять этот метод
     @GetMapping("/export")
     public void exportToPDF(HttpServletResponse response,
                             @RequestParam(value = "dateFrom", required = false) Long dateFrom,

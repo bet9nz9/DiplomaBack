@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -21,14 +22,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -39,36 +36,16 @@ public class OracleDbAccess implements DbAccess {
     private JdbcTemplate jdbcTemplate;
 
     @Override
+    @SneakyThrows
     public <T extends BaseEntity> int update(T obj) {
-        Long objId = obj.getId();
+        BigInteger objId = obj.getId();
         if (isUnique(objId)) {
             return -1;
         }
-        ArrayList<String> statements = new ArrayList<>();
-        try {
-            List<Attr> attributes = Processor.getAttributes(obj.getClass());
-            statements.add("UPDATE OBJECTS SET name = '" + obj.getName() + "', description = '" + obj.getDescription()
-                    + "' WHERE object_id = " + objId);
 
-            for (int i = 0; i < attributes.size(); i++) {
-                attributes.get(i).field.setAccessible(true);
-                if (attributes.get(i).valueType == ValueType.BASE_VALUE) {
-                    continue;
-                }
-                if (attributes.get(i).valueType == ValueType.LIST_VALUE) {
-                    List<Long> list = (List<Long>) attributes.get(i).field.get(obj);
-                    for (int j = 0; j < list.size(); j++) {
-                        statements.add(getDeleteStatement(attributes.get(i), objId));
-                        statements.add(getInsertStatement(attributes.get(i), objId, list.get(j)));
-                    }
-                } else {
-                    statements.add(getUpdateStatement(attributes.get(i), objId, attributes.get(i).field.get(obj)));
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return 1;
-        }
+        T objectFromDataBase = (T) getById(obj.getClass(), obj.getId());
+        List<String> statements =  new UpdateRequestBuilder<T>().getUpdateStatements(objectFromDataBase, obj);
+
         String[] str = new String[0];
         logger.log(Level.INFO, "Update statements: " + statements);
         jdbcTemplate.batchUpdate(statements.toArray(str));
@@ -78,7 +55,7 @@ public class OracleDbAccess implements DbAccess {
     @Override
     @SneakyThrows
     public <T extends BaseEntity> int insert(T obj) {
-        obj.setId(jdbcTemplate.queryForObject("select OBJECTS_SEQ.NEXTVAL from dual ", Long.class));
+        obj.setId(jdbcTemplate.queryForObject("select OBJECTS_SEQ.NEXTVAL from dual ", BigInteger.class));
 
         List<String> statements = new InsertRequestBuilder<T>().getInsertStatements(obj);
 
@@ -90,40 +67,12 @@ public class OracleDbAccess implements DbAccess {
         return 0;
     }
 
-    private String getInsertStatement(Attr attr, Long objectId, Object value) {
-        String newValue = "'" + value + "'";
-        if (value == null) {
-            newValue = null;
-            if (attr.valueType.getTable() == "OBJREFERENCE") {
-                return null;
-            }
-        }
-        if (attr.valueType.getTable() == "OBJREFERENCE") {
-            BaseEntity baseEntity = (BaseEntity) value;
-            return "\nINSERT INTO ATTRIBUTES (ATTR_ID, OBJECT_ID, VALUE) VALUES" + " (" + attr.id + ", " + objectId + ", "
-                    + baseEntity.getId().toString() + ")";
-        }
-        if (attr.valueType.getValueType().equals("DATE_VALUE")) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            newValue = dateFormat.format(value);
-            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
-                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", (TO_DATE('"
-                    + newValue + "', 'yyyy-mm-dd hh24:mi:ss')))";
-        } else {
-            return "\nINSERT INTO " + attr.valueType.getTable() + " (ATTR_ID, OBJECT_ID, "
-                    + attr.valueType.getValueType() + ") VALUES" + " (" + attr.id + ", " + objectId + ", "
-                    + newValue + ")";
-        }
-    }
-
-    private boolean isUnique(Long id) {
-        if (jdbcTemplate.queryForList("SELECT object_id FROM objects WHERE object_id =" + id).isEmpty())
-            return true;
-        return false;
+    private boolean isUnique(BigInteger id) {
+        return jdbcTemplate.queryForList("SELECT object_id FROM objects WHERE object_id =" + id).isEmpty();
     }
 
     @Override
-    public <T extends BaseEntity> Integer delete(Class<T> clazz, Long id) {
+    public <T extends BaseEntity> Integer delete(Class<T> clazz, BigInteger id) {
         int objTypeId = Processor.getObjtypeId(clazz);
         return jdbcTemplate.update("DELETE FROM OBJECTS WHERE OBJECT_ID = " + id);
     }
@@ -177,7 +126,7 @@ public class OracleDbAccess implements DbAccess {
                     if (attr.valueType.equals(ValueType.LIST_VALUE)) {
                         new MapperDirector(new BooleanValueMapper(attr)).mapObjectAttribute(object, getListValueById(value));
                     } else if (attr.valueType.equals(ValueType.REF_VALUE)) {
-                        Long referencedObjId = getReferencedObjectId(rs.getObject("id"), attr.id);
+                        BigInteger referencedObjId = getReferencedObjectId(rs.getObject("id"), attr.id);
                         new MapperDirector(new ReferenceMapper(attr)).mapObjectAttribute(object, getById(attr.clazz, referencedObjId));
                     } else if (attr.valueType.equals(ValueType.DATE_VALUE)) {
                         new MapperDirector(new DateValueMapper(attr)).mapObjectAttribute(object, value);
@@ -197,7 +146,7 @@ public class OracleDbAccess implements DbAccess {
      */
 
     @Override
-    public <T extends BaseEntity> T getById(Class<T> clazz, Long id) {
+    public <T extends BaseEntity> T getById(Class<T> clazz, BigInteger id) {
         List<T> result = selectAll(clazz, Director.valueOf(clazz).
                 getRequest(new RequestGetByID(new Request(clazz), id)).
                 buildRequest());
@@ -216,9 +165,13 @@ public class OracleDbAccess implements DbAccess {
         return list.get(0);
     }
 
-    private Long getReferencedObjectId(Object objectId, Object attrId) {
+    private BigInteger getReferencedObjectId(Object objectId, Object attrId) {
         String request = MessageFormat.format("SELECT reference FROM OBJREFERENCE WHERE attr_id = {0} and object_id = {1}", attrId, objectId);
-        return jdbcTemplate.queryForObject(request, Long.class);
+        try{
+            return jdbcTemplate.queryForObject(request, BigInteger.class);
+        } catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     private String getListValueById(Object listValueId){
@@ -241,7 +194,8 @@ public class OracleDbAccess implements DbAccess {
         return jdbcTemplate.queryForList(sql, String.class);
     }
 
-    public List<Notification> getAllNotesById(int categoryId) {
+    //TODO: посмотреть зачем оно надо
+    public List<Notification> getAllNotesById(BigInteger categoryId) {
         String sql = "SELECT * FROM ( SELECT o.object_id \"id\",\n" +
                 "                       listagg(o.name) \"name\",\n" +
                 "                       listagg(o.description) \"description\" ,\n" +
@@ -260,31 +214,5 @@ public class OracleDbAccess implements DbAccess {
                 "                group by o.object_id\n" +
                 "              ) where \"category\" = " + categoryId + "";
         return jdbcTemplate.queryForList(sql, Notification.class);
-    }
-
-    private String getDeleteStatement(Attr attr, Long objectId) {
-        return "DELETE FROM " + attr.valueType.getTable() + " WHERE attr_id = " + attr.id + " AND object_id = "
-                + objectId;
-    }
-
-    private String getUpdateStatement(Attr attr, Long objectId, Object value) {
-        String newValue = "'" + value + "'";
-        if (value == null) {
-            newValue = null;
-        }
-        if (attr.valueType == ValueType.REF_VALUE) {
-            BaseEntity baseEntity = (BaseEntity) value;
-            return "UPDATE " + attr.valueType.getTable() + " SET " + attr.valueType.getValueType() + " = " + baseEntity.getId()
-                    + " WHERE attr_id = " + attr.id + " AND object_id = " + objectId;
-        }
-        if (attr.valueType == ValueType.DATE_VALUE) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            newValue = dateFormat.format(value);
-            return "\nUPDATE " + attr.valueType.getTable() + " SET " + attr.valueType.getValueType() + " = to_date('" + newValue
-                    + "', 'yyyy-mm-dd hh24:mi:ss') WHERE attr_id = " + attr.id + " AND object_id = " + objectId;
-        } else {
-            return "\nUPDATE " + attr.valueType.getTable() + " SET " + attr.valueType.getValueType() + " = " + newValue
-                    + " WHERE attr_id = " + attr.id + " AND object_id = " + objectId;
-        }
     }
 }

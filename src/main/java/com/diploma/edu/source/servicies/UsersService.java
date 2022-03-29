@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,13 +29,13 @@ public class UsersService implements Service<User> {
     }
 
     @Override
-    public User getById(Long id) {
+    public User getById(BigInteger id) {
         return oracleDbAccess.getById(User.class, id);
     }
 
     @Override
     public boolean create(User object) {
-        object.setRole(roleService.getById(8L));
+        object.setRole(roleService.getById(new BigInteger("8")));
         object.setPassword(passwordEncoder.encode(object.getPassword()));
         if (oracleDbAccess.insert(object) == 1) {
             return false;
@@ -44,7 +45,7 @@ public class UsersService implements Service<User> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(User.class, id) == 1) {
             return false;
         } else {

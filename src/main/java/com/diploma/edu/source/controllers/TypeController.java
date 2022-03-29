@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,20 +27,6 @@ public class TypeController {
 
     @GetMapping
     public Page<Type> getAll(@RequestParam Map<String, String> params) {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        Pageable pageable = null;
-//        if (page == null && size != null) {
-//            pageable = PageRequest.of(0, size);
-//        }
-//        if (page != null && size != null) {
-//            pageable = PageRequest.of(page, size);
-//        }
-//        if (value != null) {
-//            filters.add(new SearchCriteria("value", value));
-//        }
-//        return service.getAll(pageable, filters, new SortCriteria(sort));
-
         return service.getAll(GetRequestParams.getPageable(params),
                 GetRequestParams.getFilters(params),
                 GetRequestParams.getSortCriteria(params));
@@ -51,7 +38,7 @@ public class TypeController {
     }
 
     @DeleteMapping("{id}")
-    public boolean deleteType(@PathVariable("id") Long typeId) {
+    public boolean deleteType(@PathVariable("id") BigInteger typeId) {
         return service.delete(typeId);
     }
 

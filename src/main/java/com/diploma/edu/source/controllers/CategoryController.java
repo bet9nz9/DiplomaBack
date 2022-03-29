@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,27 +28,13 @@ public class CategoryController {
 
     @GetMapping
     public Page<Category> getAll(@RequestParam Map<String, String> params) {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        Pageable pageable = null;
-//        if (page == null && size != null) {
-//            pageable = PageRequest.of(0, size);
-//        }
-//        if (page != null && size != null) {
-//            pageable = PageRequest.of(page, size);
-//        }
-//        if (number != null) {
-//            filters.add(new SearchCriteria("number", number));
-//        }
-//        return service.getAll(pageable, filters, new SortCriteria(sort));
-
         return service.getAll(GetRequestParams.getPageable(params),
                 GetRequestParams.getFilters(params),
                 GetRequestParams.getSortCriteria(params));
     }
 
     @GetMapping("/get-one/{id}")
-    public Category getOne(@PathVariable("id") Long id){
+    public Category getOne(@PathVariable("id") BigInteger id){
         return service.getById(id);
     }
 
@@ -61,8 +49,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public boolean deleteCategory(@PathVariable("id") Long categoryId){
-        if(service.getAllNotesById(Math.toIntExact(categoryId)))
+    public boolean deleteCategory(@PathVariable("id") BigInteger categoryId){
+        if(service.getAllNotesById(categoryId))
             return false;
         else return service.delete(categoryId);
     }

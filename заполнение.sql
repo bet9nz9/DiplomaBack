@@ -289,10 +289,10 @@ insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VAL
 (25, OBJECTS_SEQ.currval, null, null, null);
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
-(26, OBJECTS_SEQ.currval, 'true', null, null);
+(26, OBJECTS_SEQ.currval, null, null, (select LIST_VALUE_ID from LISTS where VALUE = 'true'));
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
-(27, OBJECTS_SEQ.currval, 'true', null, null);
+(27, OBJECTS_SEQ.currval, null, null, (select LIST_VALUE_ID from LISTS where VALUE = 'true'));
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
 (55, OBJECTS_SEQ.currval, null, null, null);
@@ -305,7 +305,7 @@ insert into OBJECTS(object_id, parent_id, object_type_id, name, description) VAL
 (OBJECTS_SEQ.nextval, null, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Category'), 'Гостям', 'Уведомление только для гостей');
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
-(44, OBJECTS_SEQ.currval, 'false', null, null);
+(44, OBJECTS_SEQ.currval, null, null, (select LIST_VALUE_ID from LISTS where VALUE = 'false'));
 
 /*стартовое сообщение для гостей*/
 insert into OBJECTS(object_id, parent_id, object_type_id, name, description) VALUES

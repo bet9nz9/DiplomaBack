@@ -4,14 +4,16 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
+import java.math.BigInteger;
+
 @ObjectType(id = 7)
 public class Address extends BaseEntity {
 
     @Attribute(id = 17, valueType = ValueType.VALUE)
-    private String flat;
+    private BigInteger flat;
 
     @Attribute(id = 49, valueType = ValueType.VALUE)
-    private Integer apartmentNumber;
+    private BigInteger apartmentNumber;
 
     @Attribute(id = 16, clazz = Building.class)
     private Building building;
@@ -19,11 +21,11 @@ public class Address extends BaseEntity {
     @Attribute(id = 48, clazz = User.class)
     private User referencedUser;
 
-    public String getFlat() {
+    public BigInteger getFlat() {
         return flat;
     }
 
-    public void setFlat(String flat) {
+    public void setFlat(BigInteger flat) {
         this.flat = flat;
     }
 
@@ -43,11 +45,11 @@ public class Address extends BaseEntity {
         this.referencedUser = referencedUser;
     }
 
-    public Integer getApartmentNumber() {
+    public BigInteger getApartmentNumber() {
         return apartmentNumber;
     }
 
-    public void setApartmentNumber(Integer apartmentNumber) {
+    public void setApartmentNumber(BigInteger apartmentNumber) {
         this.apartmentNumber = apartmentNumber;
     }
 }

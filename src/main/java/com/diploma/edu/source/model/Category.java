@@ -7,7 +7,7 @@ import com.diploma.edu.source.db.annotations.ValueType;
 @ObjectType(id = 13)
 public class Category extends BaseEntity {
 
-    @Attribute(id = 44, valueType = ValueType.VALUE)
+    @Attribute(id = 44, valueType = ValueType.LIST_VALUE)
     private Boolean important;
 
     public Boolean getImportant() {

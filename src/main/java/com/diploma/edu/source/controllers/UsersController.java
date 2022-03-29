@@ -8,6 +8,7 @@ import org.springframework.data.domain.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,38 +28,7 @@ public class UsersController {
 
     @GetMapping
     public Page<User> getAll(@RequestParam Map<String, String> params) {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        Pageable pageable = null;
-//        if (page == null && size != null) {
-//            pageable = PageRequest.of(0, size);
-//        }
-//        if (page != null && size != null) {
-//            pageable = PageRequest.of(page, size);
-//        }
-//        if (email != null) {
-//            filters.add(new SearchCriteria("email", "like '%" + email + "%' "));
-//        }
-//        if (firstName != null) {
-//            filters.add(new SearchCriteria("firstName", "like '%" + firstName + "%' "));
-//        }
-//        if (lastName != null) {
-//            filters.add(new SearchCriteria("lastName", "like '%" + lastName + "%' "));
-//        }
-//        if (patronymic != null) {
-//            filters.add(new SearchCriteria("patronymic", "like '%" + patronymic + "%' "));
-//        }
-//        if (isActive != null) {
-//            filters.add(new SearchCriteria("isActive", "like '%" + isActive + "%' "));
-//        }
-//        if (receiveUtilityNotification != null) {
-//            filters.add(new SearchCriteria("receiveUtilityNotification", "like '%" + receiveUtilityNotification + "%' "));
-//        }
-//        if (roleID != null) {
-//            filters.add(new SearchCriteria("roleID", roleID));
-//        }
-//        return service.getAll(pageable, filters, new SortCriteria(sort));
-
+        System.out.println();
         return service.getAll(GetRequestParams.getPageable(params),
                 GetRequestParams.getFilters(params),
                 GetRequestParams.getSortCriteria(params));
@@ -76,12 +46,12 @@ public class UsersController {
     }
 
     @DeleteMapping("{id}")
-    public boolean deleteUser(@PathVariable("id") Long userId) {
+    public boolean deleteUser(@PathVariable("id") BigInteger userId) {
         return service.delete(userId);
     }
 
     @RequestMapping(value = "/get-one/{id}")
-    public User getOne(@PathVariable("id") Long id) {
+    public User getOne(@PathVariable("id") BigInteger id) {
         return service.getById(id);
     }
 }

@@ -8,6 +8,7 @@ import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +51,7 @@ public class AddressController {
     }
 
     @GetMapping("{id}")
-    public Address getUtility(@PathVariable("id") Long addressID) {
+    public Address getUtility(@PathVariable("id") BigInteger addressID) {
         return service.getById(addressID);
     }
 
@@ -60,7 +61,7 @@ public class AddressController {
     }
 
     @DeleteMapping("{id}")
-    public boolean deleteAddress(@PathVariable("id") Long addressId) {
+    public boolean deleteAddress(@PathVariable("id") BigInteger addressId) {
         return service.delete(addressId);
     }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -21,7 +22,7 @@ public class AddressService implements Service<Address> {
     }
 
     @Override
-    public Address getById(Long id) {
+    public Address getById(BigInteger id) {
         return oracleDbAccess.getById(Address.class, id);
     }
 
@@ -35,7 +36,7 @@ public class AddressService implements Service<Address> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(Address.class, id) == 1) {
             return false;
         } else {

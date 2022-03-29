@@ -7,6 +7,7 @@ import com.diploma.edu.source.model.Building;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -19,7 +20,7 @@ public class BuildingService implements Service<Building> {
     }
 
     @Override
-    public Building getById(Long id) {
+    public Building getById(BigInteger id) {
         return oracleDbAccess.getById(Building.class, id);
     }
 
@@ -33,7 +34,7 @@ public class BuildingService implements Service<Building> {
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(Building.class, id) == 1) {
             return false;
         } else {

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @org.springframework.stereotype.Service
@@ -20,7 +21,7 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
     }
 
     @Override
-    public com.diploma.edu.source.model.Service getById(Long id) {
+    public com.diploma.edu.source.model.Service getById(BigInteger id) {
         return oracleDbAccess.getById(com.diploma.edu.source.model.Service.class, id);
     }
 
@@ -34,7 +35,7 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(com.diploma.edu.source.model.Service.class, id) == 1) {
             return false;
         } else {

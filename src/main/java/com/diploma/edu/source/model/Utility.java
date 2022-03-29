@@ -4,6 +4,8 @@ import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Date;
 
 @ObjectType(id = 12)
@@ -16,15 +18,15 @@ public class Utility extends BaseEntity{
     private Date dateAndTime;
 
     @Attribute(id = 47 ,valueType = ValueType.VALUE)
-    private Integer startMonthReading;
+    private BigInteger startMonthReading;
 
     @Attribute(id = 39, valueType = ValueType.VALUE)
-    private Integer endMonthReading;
+    private BigInteger endMonthReading;
 
     @Attribute(id = 40, valueType = ValueType.VALUE)
     private Float amountToPay;
 
-    @Attribute(id = 41, valueType = ValueType.VALUE)
+    @Attribute(id = 41, valueType = ValueType.LIST_VALUE)
     private Boolean status;
 
     @Attribute(id = 42, valueType = ValueType.VALUE)
@@ -52,11 +54,11 @@ public class Utility extends BaseEntity{
         this.dateAndTime = dateAndTime;
     }
 
-    public Integer getEndMonthReading() {
+    public BigInteger getEndMonthReading() {
         return endMonthReading;
     }
 
-    public void setEndMonthReading(Integer endMonthReading) {
+    public void setEndMonthReading(BigInteger endMonthReading) {
         this.endMonthReading = endMonthReading;
     }
 
@@ -92,11 +94,11 @@ public class Utility extends BaseEntity{
         this.service = service;
     }
 
-    public Integer getStartMonthReading() {
+    public BigInteger getStartMonthReading() {
         return startMonthReading;
     }
 
-    public void setStartMonthReading(Integer startMonthReading) {
+    public void setStartMonthReading(BigInteger startMonthReading) {
         this.startMonthReading = startMonthReading;
     }
 

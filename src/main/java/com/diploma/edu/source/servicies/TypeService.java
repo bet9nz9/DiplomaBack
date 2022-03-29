@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ public class TypeService implements Service<Type>{
     }
 
     @Override
-    public Type getById(Long id) {
+    public Type getById(BigInteger id) {
         return oracleDbAccess.getById(Type.class, id);
     }
 
@@ -36,7 +37,7 @@ public class TypeService implements Service<Type>{
     }
 
     @Override
-    public boolean delete(Long id) {
+    public boolean delete(BigInteger id) {
         if (oracleDbAccess.delete(Type.class, id) == 1) {
             return false;
         } else {
