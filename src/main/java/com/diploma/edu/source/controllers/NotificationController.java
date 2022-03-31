@@ -52,7 +52,8 @@ public class NotificationController {
     public boolean createNotification(@RequestBody Notification notification) {
         service.create(notification);
         List<String> emails = service.getAllEmails();
-        emails.add("victormorgish@gmail.com");
+        //TODO: для проверки можно добавить свою почту
+        //emails.add("victormorgish@gmail.com");
         for (String email: emails) {
             mailSenderService.sendEmail(email, notification.getTitle(), notification.getText());
         }

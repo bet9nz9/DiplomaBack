@@ -51,8 +51,6 @@ public class CategoryService implements Service<Category> {
     }
 
     public boolean getAllNotesById(BigInteger id){
-        if(oracleDbAccess.getAllNotesById(id).size()>0)
-            return true;
-        else return false;
+        return oracleDbAccess.getAllNotesById(id).equals(new BigInteger("0"));
     }
 }

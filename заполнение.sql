@@ -283,10 +283,10 @@ insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VAL
 (23, OBJECTS_SEQ.currval, 'Admin', null, null);
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
-(24, OBJECTS_SEQ.currval, null, null, null);
+(24, OBJECTS_SEQ.currval, 'Admin', null, null);
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
-(25, OBJECTS_SEQ.currval, null, null, null);
+(25, OBJECTS_SEQ.currval, 'Admin', null, null);
 
 insert into ATTRIBUTES(attr_id, object_id, value, date_value, list_value_id) VALUES
 (26, OBJECTS_SEQ.currval, null, null, (select LIST_VALUE_ID from LISTS where VALUE = 'true'));
@@ -330,6 +330,6 @@ insert into OBJREFERENCE(attr_id, reference, object_id) VALUES
 (35, (select OBJECT_ID from OBJECTS where NAME = 'Гостям'), OBJECTS_SEQ.currval);
 
 insert into OBJREFERENCE(attr_id, reference, object_id) VALUES
-(36, (select OBJECT_ID from OBJECTS where NAME = 'ADMIN'), OBJECTS_SEQ.currval);
+(36, (select OBJECT_ID from OBJECTS where NAME = 'Admin' and object_type_id = 8), OBJECTS_SEQ.currval);
 
 commit;

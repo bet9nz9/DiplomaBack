@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Notification;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +51,11 @@ public class CategoryController {
 
     @DeleteMapping("/delete/{id}")
     public boolean deleteCategory(@PathVariable("id") BigInteger categoryId){
-        if(service.getAllNotesById(categoryId))
+        if(!service.getAllNotesById(categoryId)){
+            //TODO: пробросить ошибку, что у категории есть референсные нотификации
             return false;
-        else return service.delete(categoryId);
+        } else {
+            return service.delete(categoryId);
+        }
     }
 }
