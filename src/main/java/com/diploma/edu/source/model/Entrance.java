@@ -13,10 +13,10 @@ public class Entrance extends BaseEntity {
     @Attribute(id = 7, clazz = Building.class)
     protected Building building;
 
-    @Attribute(id = 6, valueType = ValueType.VALUE)
+    @Attribute(id = 6, valueType = ValueType.LIST_VALUE)
     protected Boolean isActive;
 
-    @Attribute(id = 50, valueType = ValueType.VALUE)
+    @Attribute(id = 50, valueType = ValueType.LIST_VALUE)
     protected Boolean status;
 
     public Boolean getStatus() {

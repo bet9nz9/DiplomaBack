@@ -48,6 +48,7 @@ public class OracleDbAccess implements DbAccess {
 
         String[] str = new String[0];
         logger.log(Level.INFO, "Update statements: " + statements);
+        //TODO: пробрасывать ошибку, что изменений нет
         jdbcTemplate.batchUpdate(statements.toArray(str));
         return 0;
     }
@@ -55,7 +56,7 @@ public class OracleDbAccess implements DbAccess {
     @Override
     @SneakyThrows
     public <T extends BaseEntity> int insert(T obj) {
-        obj.setId(jdbcTemplate.queryForObject("select OBJECTS_SEQ.NEXTVAL from dual ", BigInteger.class));
+        obj.setId(jdbcTemplate.queryForObject(PreparedRequests.GET_NEW_OBJECT_ID.getRequest(), BigInteger.class));
 
         List<String> statements = new InsertRequestBuilder<T>().getInsertStatements(obj);
 
@@ -68,12 +69,12 @@ public class OracleDbAccess implements DbAccess {
     }
 
     private boolean isUnique(BigInteger id) {
-        return jdbcTemplate.queryForList("SELECT object_id FROM objects WHERE object_id =" + id).isEmpty();
+        return jdbcTemplate.queryForList(MessageFormat.format(PreparedRequests.GET_OBJECT_ID.getRequest(), id)).isEmpty();
     }
 
     @Override
     public <T extends BaseEntity> Integer delete(Class<T> clazz, BigInteger id) {
-        return jdbcTemplate.update("DELETE FROM OBJECTS WHERE OBJECT_ID = " + id);
+        return jdbcTemplate.update(MessageFormat.format(PreparedRequests.DELETE_OBJECT.getRequest(), id));
     }
 
     /**
@@ -165,9 +166,8 @@ public class OracleDbAccess implements DbAccess {
     }
 
     private BigInteger getReferencedObjectId(Object objectId, Object attrId) {
-        String request = MessageFormat.format("SELECT reference FROM OBJREFERENCE WHERE attr_id = {0} and object_id = {1}", attrId, objectId);
         try{
-            return jdbcTemplate.queryForObject(request, BigInteger.class);
+            return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_REFERENCED_OBJ_ID.getRequest(), attrId, objectId), BigInteger.class);
         } catch (EmptyResultDataAccessException e){
             return null;
         }
@@ -177,28 +177,16 @@ public class OracleDbAccess implements DbAccess {
         if (listValueId == null){
             return null;
         }
-        String request = MessageFormat.format("SELECT VALUE FROM LISTS WHERE LIST_VALUE_ID = {0}", listValueId);
-        return jdbcTemplate.queryForObject(request, String.class);
+        return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_LIST_VALUE_BY_ID.getRequest(), listValueId), String.class);
     }
 
     public List<String> getEmails() {
 
-        String request = "SELECT VALUE FROM ATTRIBUTES WHERE ATTR_ID = 21";
-
-//        String sql = "SELECT * FROM ( SELECT\n" +
-//                "                       listagg(a0.VALUE) \"email\"\n" +
-//                "                FROM OBJECTS o\n" +
-//                "                         left join ATTRIBUTES a0 on o.object_id = a0.object_id and a0.attr_id = 21\n" +
-//                "                WHERE o.object_type_id = 10\n" +
-//                "                group by o.object_id\n" +
-//                "              ) WHERE 1=1";
-
-        return jdbcTemplate.queryForList(request, String.class);
+        return jdbcTemplate.queryForList(PreparedRequests.GET_EMAILS.getRequest(), String.class);
     }
 
     public BigInteger getAllNotesById(BigInteger categoryId) {
-        String request = "select count(*) from OBJREFERENCE where ATTR_ID = 35 and REFERENCE = {0}";
 
-        return jdbcTemplate.queryForObject(MessageFormat.format(request, categoryId), BigInteger.class);
+        return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.IS_CATEGORY_WITHOUT_NOTIFICATIONS.getRequest(), categoryId), BigInteger.class);
     }
 }

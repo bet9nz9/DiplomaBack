@@ -10,7 +10,7 @@ public class Ekey extends BaseEntity {
     @Attribute(id = 8, valueType = ValueType.VALUE)
     protected String keyCode;
 
-    @Attribute(id = 9, valueType = ValueType.VALUE)
+    @Attribute(id = 9, valueType = ValueType.LIST_VALUE)
     protected Boolean isActive;
 
     @Attribute(id = 10, clazz = User.class)
