@@ -1,10 +1,12 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
+import com.diploma.edu.source.controllers.requestParams.PagingAndSortingParams;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Хранит билдер для запроса и начальный запрос.
@@ -33,6 +35,7 @@ public class Director {
         return director;
     }
 
+    @Deprecated
     public Request getRequest(Pageable pageable, List<SearchCriteria> filters, SortCriteria sortCriteria) {
 
         if (pageable == null) {
@@ -44,8 +47,25 @@ public class Director {
 
         builder.buildSelectBlock();
         builder.buildFilterBlock();
+        builder.buildSortBlock();
         return builder.getRequest();
     }
+
+    public Request getRequest(Map<String, String> params) {
+
+        if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) || params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
+            setBuilder(new RequestWithPaging(request, params));
+        } else {
+            setBuilder(new RequestWithoutPaging(request, params));
+        }
+
+        builder.buildSelectBlock();
+        builder.buildFilterBlock();
+        builder.buildSortBlock();
+        return builder.getRequest();
+    }
+
+
 
     public Request getRequest(RequestBuilder builder) {
         setBuilder(builder);

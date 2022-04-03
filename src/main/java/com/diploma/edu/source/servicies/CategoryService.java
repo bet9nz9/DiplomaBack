@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class CategoryService implements Service<Category> {
@@ -46,8 +47,8 @@ public class CategoryService implements Service<Category> {
     }
 
     @Override
-    public Page<Category> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Category.class, pageable, filter, sort);
+    public Page<Category> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Category.class, params);
     }
 
     public boolean getAllNotesById(BigInteger id){

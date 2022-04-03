@@ -24,11 +24,6 @@ public class Request {
         attributes = Processor.getAttributes(clazz);
 
         for (Attr attr : attributes) {
-//            if (attr.valueType.equals(ValueType.LIST_VALUE)){
-//                selectBlock.append(",\n"+ attr.field.getName() + ".LIST_VALUE_ID ")
-//                .append(attr.field.getName());
-//            }
-
             if (!attr.valueType.equals(ValueType.BASE_VALUE)){
                 selectBlock.append(",\n" + attr.field.getName() + ".")
                         .append(attr.valueType.getValueType() + " " + attr.field.getName());
@@ -38,25 +33,6 @@ public class Request {
                         .append(attr.field.getName() + ".attr_id = " + attr.id + "\n");
             }
         }
-
-        /*for (int i = 0; i < attributes.size(); i++) {
-            if (attributes.get(i).valueType == ValueType.BASE_VALUE
-                    || attributes.get(i).valueType == ValueType.LIST_VALUE) {
-                continue;
-            }
-            if (attributes.get(i).valueType == ValueType.DATE_VALUE) {
-                selectBlock.append(",\n to_date(listagg(to_char(a" + i + "." + attributes.get(i).valueType.getValueType() +
-                        ", 'yyyy-mm-dd hh24:mi:ss')), 'yyyy-mm-dd hh24:mi:ss')" +
-                        " \"" + attributes.get(i).field.getName() + "\"");
-            } else {
-                selectBlock.append(",\n listagg(a" + i + ".")
-                        .append(attributes.get(i).valueType.getValueType() + ") ")
-                        .append("\"" + attributes.get(i).field.getName() + "\"");
-            }
-
-            fromBlock.append("left join " + attributes.get(i).valueType.getTable() + " a" + i + " ")
-                    .append("on o.object_id = a" + i + ".object_id and a" + i + ".attr_id = " + attributes.get(i).id + " \n");
-        }*/
     }
 
     public StringBuilder getSelectBlock() {

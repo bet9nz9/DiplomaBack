@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class EkeyService implements Service<Ekey> {
@@ -54,7 +55,7 @@ public class EkeyService implements Service<Ekey> {
     }
 
     @Override
-    public Page<Ekey> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Ekey.class, pageable, filter, sort);
+    public Page<Ekey> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Ekey.class, params);
     }
 }

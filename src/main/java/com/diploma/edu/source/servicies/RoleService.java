@@ -1,14 +1,11 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import com.diploma.edu.source.model.Role;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class RoleService implements Service<Role> {
@@ -52,7 +49,7 @@ public class RoleService implements Service<Role> {
     }
 
     @Override
-    public Page<Role> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Role.class, pageable, filter, sort);
+    public Page<Role> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Role.class, params);
     }
 }

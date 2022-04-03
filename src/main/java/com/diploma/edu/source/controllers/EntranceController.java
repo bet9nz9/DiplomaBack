@@ -3,17 +3,15 @@ package com.diploma.edu.source.controllers;
 import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.model.Logger;
-import com.diploma.edu.source.model.Notification;
-import com.lowagie.text.DocumentException;
 import com.diploma.edu.source.servicies.EntranceService;
 import com.diploma.edu.source.servicies.ExportPDFService;
 import com.diploma.edu.source.servicies.LoggerService;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
+import com.lowagie.text.DocumentException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
-
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -81,11 +79,7 @@ public class EntranceController {
 
     @GetMapping
     public Page<Entrance> getAll(@RequestParam Map<String, String> params) {
-        Page<Entrance> page1 = service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
-
-        return page1;
+        return service.getAll(params);
     }
 
     @GetMapping("/log")
@@ -107,30 +101,30 @@ public class EntranceController {
                             @RequestParam(value = "dateTo", required = false) Long dateTo,
                             @RequestParam(value = "filter", required = false) String filter) throws DocumentException, IOException {
 
-        List<SearchCriteria> filters = new ArrayList<>();
-        if (dateFrom != null) {
-            filters.add(new SearchCriteria("dateAndTime", " > to_date('" + changeDateFormat(new Date(dateFrom))
-                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
-        }
-        if (dateTo != null) {
-            filters.add(new SearchCriteria("dateAndTime", " < to_date('" + changeDateFormat(new Date(dateTo))
-                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
-        }
-        response.setContentType("application/pdf");
-
-        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-        String currentDateTime = dateFormatter.format(new Date());
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename = entrance_" + currentDateTime + ".pdf";
-
-        response.setHeader(headerKey,headerValue);
-
-        SortCriteria sortCriteria = new SortCriteria("isActive:DESC");
-        Page<Logger> pageEntrance = loggerService.getAll(null,filters,null);
-        List<Logger> loggerList = pageEntrance.getContent();
-
-        ExportPDFService exporter = new ExportPDFService(loggerList);
-        exporter.export(response);
+//        List<SearchCriteria> filters = new ArrayList<>();
+//        if (dateFrom != null) {
+//            filters.add(new SearchCriteria("dateAndTime", " > to_date('" + changeDateFormat(new Date(dateFrom))
+//                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
+//        }
+//        if (dateTo != null) {
+//            filters.add(new SearchCriteria("dateAndTime", " < to_date('" + changeDateFormat(new Date(dateTo))
+//                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
+//        }
+//        response.setContentType("application/pdf");
+//
+//        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+//        String currentDateTime = dateFormatter.format(new Date());
+//        String headerKey = "Content-Disposition";
+//        String headerValue = "attachment; filename = entrance_" + currentDateTime + ".pdf";
+//
+//        response.setHeader(headerKey, headerValue);
+//
+//        SortCriteria sortCriteria = new SortCriteria("isActive:DESC");
+//        //Page<Logger> pageEntrance = loggerService.getAll(null, filters, null);
+//        //List<Logger> loggerList = pageEntrance.getContent();
+//
+//        ExportPDFService exporter = new ExportPDFService(loggerList);
+//        exporter.export(response);
     }
 
     private String changeDateFormat(Date date) {

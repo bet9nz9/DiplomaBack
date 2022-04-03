@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class EntranceService implements Service<Entrance> {
@@ -50,8 +51,8 @@ public class EntranceService implements Service<Entrance> {
     }
 
     @Override
-    public Page<Entrance> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Entrance.class, pageable, filter, sort);
+    public Page<Entrance> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Entrance.class, params);
     }
 
 }

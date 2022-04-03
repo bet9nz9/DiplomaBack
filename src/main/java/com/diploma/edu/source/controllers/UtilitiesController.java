@@ -1,19 +1,19 @@
 package com.diploma.edu.source.controllers;
 
-import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.model.Service;
+import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.servicies.ServicesService;
 import com.diploma.edu.source.servicies.UtilitiesService;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
 
 
 @RequestMapping("utilities")
@@ -32,9 +32,7 @@ public class UtilitiesController {
 
     @GetMapping
     public Page<Utility> getAll(@RequestParam Map<String, String> params) {
-        return service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
+        return service.getAll(params);
     }
 
     @GetMapping("{id}")
@@ -43,8 +41,8 @@ public class UtilitiesController {
     }
 
     @GetMapping("/services")
-    public Page<Service> getServices(){
-        return servicesService.getAll(null, null, null);
+    public Page<Service> getServices() {
+        return servicesService.getAll(null);
     }
 
     @PostMapping("/add")

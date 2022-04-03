@@ -25,9 +25,7 @@ public class LoggerController {
 
     @GetMapping
     public Page<Logger> getAll(@RequestParam Map<String, String> params) {
-        return service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
+        return service.getAll(params);
     }
 
     @GetMapping("{id}")

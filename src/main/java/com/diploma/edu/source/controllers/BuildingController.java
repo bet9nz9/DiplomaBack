@@ -3,17 +3,11 @@ package com.diploma.edu.source.controllers;
 
 import com.diploma.edu.source.model.Building;
 import com.diploma.edu.source.servicies.BuildingService;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RequestMapping("building")
@@ -29,9 +23,7 @@ public class BuildingController {
 
     @GetMapping
     public Page<Building> getAll(@RequestParam Map<String, String> params) {
-        return service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
+        return service.getAll(params);
     }
 
     @PostMapping("/add")

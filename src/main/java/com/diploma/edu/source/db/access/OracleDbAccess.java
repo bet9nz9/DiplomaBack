@@ -1,5 +1,6 @@
 package com.diploma.edu.source.db.access;
 
+import com.diploma.edu.source.controllers.requestParams.PagingAndSortingParams;
 import com.diploma.edu.source.db.annotations.Attr;
 import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
@@ -27,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class OracleDbAccess implements DbAccess {
@@ -44,7 +46,7 @@ public class OracleDbAccess implements DbAccess {
         }
 
         T objectFromDataBase = (T) getById(obj.getClass(), obj.getId());
-        List<String> statements =  new UpdateRequestBuilder<T>().getUpdateStatements(objectFromDataBase, obj);
+        List<String> statements = new UpdateRequestBuilder<T>().getUpdateStatements(objectFromDataBase, obj);
 
         String[] str = new String[0];
         logger.log(Level.INFO, "Update statements: " + statements);
@@ -90,18 +92,24 @@ public class OracleDbAccess implements DbAccess {
      * после чего этот список необходимо передать в PageImpl, который уже построит страницу
      */
     @Override
-    public <T extends BaseEntity> Page<T> selectPage(Class<T> clazz, Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        logger.log(Level.INFO, "Request parameters: \n"
-                + "Pageable - " + pageable
-                + "\n Filter - " + filter
-                + "\n Sort - " + sort);
+    public <T extends BaseEntity> Page<T> selectPage(Class<T> clazz, Map<String, String> params) {
+        logger.log(Level.INFO, "Request parameters: \n" +
+                params.toString());
+
+        Pageable pageable = null;
+        if (!params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
+            pageable = PageRequest.of(0, new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
+        }
+        if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
+            pageable = PageRequest.of(new Integer(params.get(PagingAndSortingParams.PAGE.getParameterName())), new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
+        }
 
         List<T> resultElements = selectAll(clazz, Director.valueOf(clazz).
-                getRequest(pageable, filter, sort).
+                getRequest(params).
                 buildRequest());
         Long countOfElements = selectCountOfFilterElements(
                 Director.valueOf(clazz).
-                        getRequest(new CountElementsRequest(new Request(clazz), filter, sort)).
+                        getRequest(new CountElementsRequest(new Request(clazz), params)).
                         buildRequest());
         if (pageable == null || resultElements.isEmpty()) {
             return new PageImpl<>(resultElements);
@@ -166,15 +174,15 @@ public class OracleDbAccess implements DbAccess {
     }
 
     private BigInteger getReferencedObjectId(Object objectId, Object attrId) {
-        try{
+        try {
             return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_REFERENCED_OBJ_ID.getRequest(), attrId, objectId), BigInteger.class);
-        } catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    private String getListValueById(Object listValueId){
-        if (listValueId == null){
+    private String getListValueById(Object listValueId) {
+        if (listValueId == null) {
             return null;
         }
         return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_LIST_VALUE_BY_ID.getRequest(), listValueId), String.class);

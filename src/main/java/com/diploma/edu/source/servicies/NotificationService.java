@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class NotificationService implements Service<Notification> {
@@ -58,7 +59,7 @@ public class NotificationService implements Service<Notification> {
     }
 
     @Override
-    public Page<Notification> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Notification.class, pageable, filter, sort);
+    public Page<Notification> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Notification.class, params);
     }
 }

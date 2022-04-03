@@ -2,15 +2,11 @@ package com.diploma.edu.source.controllers;
 
 import com.diploma.edu.source.model.User;
 import com.diploma.edu.source.servicies.UsersService;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -29,9 +25,7 @@ public class UsersController {
     @GetMapping
     public Page<User> getAll(@RequestParam Map<String, String> params) {
         System.out.println();
-        return service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
+        return service.getAll(params);
     }
 
     @PostMapping("/add")

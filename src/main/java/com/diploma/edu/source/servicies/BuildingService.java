@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class BuildingService implements Service<Building> {
@@ -52,7 +53,7 @@ public class BuildingService implements Service<Building> {
     }
 
     @Override
-    public Page<Building> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Building.class, pageable, filter, sort);
+    public Page<Building> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Building.class, params);
     }
 }

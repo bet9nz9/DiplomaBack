@@ -4,12 +4,18 @@ import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 
 import java.util.List;
+import java.util.Map;
 
 public class RequestWithoutPaging extends RequestBuilder {
 
 
+    @Deprecated
     public RequestWithoutPaging(Request request, List<SearchCriteria> filter, SortCriteria sort) {
         super(request, filter, sort, null);
+    }
+
+    public RequestWithoutPaging(Request request, Map<String, String> params){
+        super(request, params);
     }
 
     @Override
@@ -19,17 +25,6 @@ public class RequestWithoutPaging extends RequestBuilder {
 
     @Override
     public void buildFilterBlock() {
-        for (SearchCriteria criteria : filter) {
-            if (criteria.getKey().equals("month")){
-                request.filterBlock.append(" AND to_date(to_char(\"date\", 'MM yyyy'),'MM yyyy') = to_date('" + criteria.getValue() + "', 'yyyy MM') ");
-            }else {
-                request.filterBlock.append(" AND " + criteria.getKey() + " " + criteria.getValue() + " ");
-            }
-        }
-        if (sort != null) {
-            request.setFilterBlock(new StringBuilder(
-                    request.filterBlock.toString() + " order by \"" + sort.getProperty() + "\" " + sort.getDirection() + " "
-            ));
-        }
+        super.buildFilterBlock();
     }
 }

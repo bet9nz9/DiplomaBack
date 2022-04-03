@@ -8,12 +8,13 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 public interface DbAccess {
     <T extends BaseEntity> int update(T obj);
     <T extends BaseEntity> int insert(T obj);
     <T extends BaseEntity> Integer delete(Class<T> clazz, BigInteger id);
-    <T extends BaseEntity> Page<T> selectPage(Class<T> clazz, Pageable pageable, List<SearchCriteria> filter, SortCriteria sort);
+    <T extends BaseEntity> Page<T> selectPage(Class<T> clazz, Map<String, String> params);
     <T extends BaseEntity> T getById(Class<T> clazz, BigInteger id);
 
 }

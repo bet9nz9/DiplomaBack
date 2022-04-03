@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class UsersService implements Service<User> {
@@ -63,24 +65,24 @@ public class UsersService implements Service<User> {
     }
 
     @Override
-    public Page<User> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(User.class, pageable, filter, sort);
+    public Page<User> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(User.class, params);
     }
 
     public User findUserByEmail(String email) throws IndexOutOfBoundsException{
-        List<SearchCriteria> filter = new ArrayList<>();
-        filter.add(new SearchCriteria("email", " = '" + email + "' "));
+        Map<String, String> params = new HashMap<>();
+        params.put("email", email);
 
-        return oracleDbAccess.selectPage(User.class, null, filter, null)
+        return oracleDbAccess.selectPage(User.class, params)
                 .getContent()
                 .get(0);
     }
 
     public User findByActivatedCode(String code) {
-        List<SearchCriteria> filter = new ArrayList<>();
-        filter.add(new SearchCriteria("activationCode", " = '" + code + "' "));
+        Map<String, String> params = new HashMap<>();
+        params.put("activationCode", code);
 
-        List<User> users = oracleDbAccess.selectPage(User.class, null, filter, null).getContent();
+        List<User> users = oracleDbAccess.selectPage(User.class, params).getContent();
 
         if(!users.isEmpty()){
             return users.get(0);

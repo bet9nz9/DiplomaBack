@@ -1,14 +1,11 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class ServicesService implements Service<com.diploma.edu.source.model.Service> {
@@ -53,7 +50,7 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
     }
 
     @Override
-    public Page<com.diploma.edu.source.model.Service> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(com.diploma.edu.source.model.Service.class, pageable, filter, sort);
+    public Page<com.diploma.edu.source.model.Service> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(com.diploma.edu.source.model.Service.class, params);
     }
 }

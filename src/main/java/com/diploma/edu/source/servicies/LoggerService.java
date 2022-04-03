@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class LoggerService implements Service<Logger>{
@@ -50,7 +51,7 @@ public class LoggerService implements Service<Logger>{
     }
 
     @Override
-    public Page<Logger> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Logger.class, pageable, filter, sort);
+    public Page<Logger> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Logger.class, params);
     }
 }

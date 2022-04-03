@@ -3,17 +3,14 @@ package com.diploma.edu.source.controllers;
 import com.diploma.edu.source.model.Notification;
 import com.diploma.edu.source.servicies.MailSenderService;
 import com.diploma.edu.source.servicies.NotificationService;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +33,7 @@ public class NotificationController {
 
     @GetMapping
     public Page<Notification> getAll(@RequestParam Map<String, String> params) {
-        Page<Notification> page1 = service.getAll(GetRequestParams.getPageable(params),
-                GetRequestParams.getFilters(params),
-                GetRequestParams.getSortCriteria(params));
-
-        return page1;
+        return service.getAll(params);
     }
 
     @DeleteMapping("/delete/{id}")

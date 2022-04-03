@@ -2,15 +2,11 @@ package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.model.Utility;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.List;
+import java.util.Map;
 
 @org.springframework.stereotype.Service
 public class UtilitiesService implements Service<Utility> {
@@ -55,7 +51,7 @@ public class UtilitiesService implements Service<Utility> {
     }
 
     @Override
-    public Page<Utility> getAll(Pageable pageable, List<SearchCriteria> filter, SortCriteria sort) {
-        return oracleDbAccess.selectPage(Utility.class, pageable, filter, sort);
+    public Page<Utility> getAll(Map<String, String> params) {
+        return oracleDbAccess.selectPage(Utility.class, params);
     }
 }
