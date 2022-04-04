@@ -1,10 +1,12 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
-import com.diploma.edu.source.controllers.requestParams.PagingAndSortingParams;
-import com.diploma.edu.source.controllers.requestParams.RequestParamDataType;
-import com.diploma.edu.source.controllers.requestParams.RequestParams;
+import com.diploma.edu.source.model.ListValues;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
+import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.PartsOfRequests;
+import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
+import com.diploma.edu.source.servicies.requestBuilder.requestParams.RequestParamDataType;
+import com.diploma.edu.source.servicies.requestBuilder.requestParams.RequestParams;
 import org.springframework.data.domain.Pageable;
 
 import java.text.MessageFormat;
@@ -26,10 +28,10 @@ public abstract class RequestBuilder {
         if (filter == null || filter.size() <= 0)
             this.filter = new ArrayList<>();
         else this.filter = filter;
-        if (sort != null){
-            if (sort.getDirection() == null || sort.getProperty() == null){
+        if (sort != null) {
+            if (sort.getDirection() == null || sort.getProperty() == null) {
                 this.sort = null;
-            }else {
+            } else {
                 this.sort = sort;
             }
         }
@@ -43,25 +45,39 @@ public abstract class RequestBuilder {
 
     public abstract void buildSelectBlock();
 
-    public void buildFilterBlock(){
-        for (RequestParams param: RequestParams.values()){
-            if (params.containsKey(param.getRequestParam())){
-                if (param.getDataType().equals(RequestParamDataType.NUM)){
-                    request.filterBlock.append(MessageFormat.format(filterNumberBlock, param.getRequestParam(), params.get(param.getRequestParam())));
+    public void buildFilterBlock() {
+        for (RequestParams param : RequestParams.values()) {
+            if (params.containsKey(param.getRequestParam())) {
+                if (param.getDataType().equals(RequestParamDataType.NUM)) {
+                    request.filterBlock.append(MessageFormat.format(PartsOfRequests.FILTER_NUMBER_BLOCK.getRequestPart(),
+                            param.getRequestParam(),
+                            params.get(param.getRequestParam())));
+                } else if (param.getDataType().equals(RequestParamDataType.BOOLEAN)) {
+                    request.filterBlock.append(
+                            MessageFormat.format(PartsOfRequests.FILTER_NUMBER_BLOCK.getRequestPart(),
+                                    param.getRequestParam(),
+                                    ListValues.getListValueIdByValue(params.get(param.getRequestParam())))
+                    );
                 } else {
-                    request.filterBlock.append(MessageFormat.format(filterStringBlock, param.getRequestParam(), params.get(param.getRequestParam())));
+                    request.filterBlock.append(MessageFormat.format(PartsOfRequests.FILTER_STRING_BLOCK.getRequestPart(),
+                            param.getRequestParam(),
+                            params.get(param.getRequestParam())));
                 }
             }
         }
-    };
+    }
 
-    public void buildSortBlock(){
-        if (params.containsKey(PagingAndSortingParams.SORT.getParameterName())){
+    ;
+
+    public void buildSortBlock() {
+        if (params.containsKey(PagingAndSortingParams.SORT.getParameterName())) {
 
             SortCriteria sortCriteria = new SortCriteria(params.get(PagingAndSortingParams.SORT.getParameterName()));
 
             request.setFilterBlock(new StringBuilder(
-                    request.filterBlock.toString() + MessageFormat.format(sortBlock, sortCriteria.getProperty(), sortCriteria.getDirection())
+                    request.filterBlock.toString() + MessageFormat.format(PartsOfRequests.SORT_BLOCK.getRequestPart(),
+                            sortCriteria.getProperty(),
+                            sortCriteria.getDirection())
             ));
         }
     }
@@ -69,9 +85,4 @@ public abstract class RequestBuilder {
     public Request getRequest() {
         return request;
     }
-
-    protected String filterNumberBlock = " AND {0} = {1}";
-    protected String filterStringBlock = " AND {0} = ''{1}''";
-    protected String sortBlock = " order by {0} {1} ";
-    protected String sortBlockWithPaging = "select * from (select row_number() over (order by {0} {1}) rowRank, a.* from({2}";
 }

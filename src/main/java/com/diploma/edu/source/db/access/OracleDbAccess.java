@@ -1,15 +1,14 @@
 package com.diploma.edu.source.db.access;
 
-import com.diploma.edu.source.controllers.requestParams.PagingAndSortingParams;
 import com.diploma.edu.source.db.annotations.Attr;
 import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
 import com.diploma.edu.source.model.BaseEntity;
-import com.diploma.edu.source.model.Notification;
 import com.diploma.edu.source.servicies.requestBuilder.*;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.mappers.*;
+import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.DeletePreparedRequests;
+import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.SelectPreparedRequests;
+import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
 import lombok.SneakyThrows;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -58,7 +57,7 @@ public class OracleDbAccess implements DbAccess {
     @Override
     @SneakyThrows
     public <T extends BaseEntity> int insert(T obj) {
-        obj.setId(jdbcTemplate.queryForObject(PreparedRequests.GET_NEW_OBJECT_ID.getRequest(), BigInteger.class));
+        obj.setId(jdbcTemplate.queryForObject(SelectPreparedRequests.GET_NEW_OBJECT_ID.getRequest(), BigInteger.class));
 
         List<String> statements = new InsertRequestBuilder<T>().getInsertStatements(obj);
 
@@ -71,12 +70,12 @@ public class OracleDbAccess implements DbAccess {
     }
 
     private boolean isUnique(BigInteger id) {
-        return jdbcTemplate.queryForList(MessageFormat.format(PreparedRequests.GET_OBJECT_ID.getRequest(), id)).isEmpty();
+        return jdbcTemplate.queryForList(MessageFormat.format(SelectPreparedRequests.GET_OBJECT_ID.getRequest(), id)).isEmpty();
     }
 
     @Override
     public <T extends BaseEntity> Integer delete(Class<T> clazz, BigInteger id) {
-        return jdbcTemplate.update(MessageFormat.format(PreparedRequests.DELETE_OBJECT.getRequest(), id));
+        return jdbcTemplate.update(MessageFormat.format(DeletePreparedRequests.DELETE_OBJECT.getRequest(), id));
     }
 
     /**
@@ -175,7 +174,7 @@ public class OracleDbAccess implements DbAccess {
 
     private BigInteger getReferencedObjectId(Object objectId, Object attrId) {
         try {
-            return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_REFERENCED_OBJ_ID.getRequest(), attrId, objectId), BigInteger.class);
+            return jdbcTemplate.queryForObject(MessageFormat.format(SelectPreparedRequests.GET_REFERENCED_OBJ_ID.getRequest(), attrId, objectId), BigInteger.class);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -185,16 +184,16 @@ public class OracleDbAccess implements DbAccess {
         if (listValueId == null) {
             return null;
         }
-        return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.GET_LIST_VALUE_BY_ID.getRequest(), listValueId), String.class);
+        return jdbcTemplate.queryForObject(MessageFormat.format(SelectPreparedRequests.GET_LIST_VALUE_BY_ID.getRequest(), listValueId), String.class);
     }
 
     public List<String> getEmails() {
 
-        return jdbcTemplate.queryForList(PreparedRequests.GET_EMAILS.getRequest(), String.class);
+        return jdbcTemplate.queryForList(SelectPreparedRequests.GET_EMAILS.getRequest(), String.class);
     }
 
     public BigInteger getAllNotesById(BigInteger categoryId) {
 
-        return jdbcTemplate.queryForObject(MessageFormat.format(PreparedRequests.IS_CATEGORY_WITHOUT_NOTIFICATIONS.getRequest(), categoryId), BigInteger.class);
+        return jdbcTemplate.queryForObject(MessageFormat.format(SelectPreparedRequests.IS_CATEGORY_WITHOUT_NOTIFICATIONS.getRequest(), categoryId), BigInteger.class);
     }
 }

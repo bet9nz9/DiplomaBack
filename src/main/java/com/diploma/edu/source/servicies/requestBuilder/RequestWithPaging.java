@@ -1,6 +1,7 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
-import com.diploma.edu.source.controllers.requestParams.PagingAndSortingParams;
+import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.PartsOfRequests;
+import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class RequestWithPaging extends RequestBuilder {
             sort = new SortCriteria(params.get(PagingAndSortingParams.SORT.getParameterName()));
         }
 
-        request.setSelectBlock(new StringBuilder(MessageFormat.format(sortBlockWithPaging, sort.getProperty(), sort.getDirection(), request.getSelectBlock())));
+        request.setSelectBlock(new StringBuilder(MessageFormat.format(PartsOfRequests.SORT_BLOCK_WITH_PAGING.getRequestPart(), sort.getProperty(), sort.getDirection(), request.getSelectBlock())));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class RequestWithPaging extends RequestBuilder {
         if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
             pageable = PageRequest.of(new Integer(params.get(PagingAndSortingParams.PAGE.getParameterName())), new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
         }
-
+        //TODO: попробовать переделать расчет
         request.setFilterBlock(new StringBuilder(
                 request.getFilterBlock() +
                         ") a) where rowRank between " +

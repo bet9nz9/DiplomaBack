@@ -4,6 +4,7 @@ import com.diploma.edu.source.db.annotations.Attr;
 import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.model.ListValues;
+import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.InsertPreparedRequests;
 
 import java.math.BigInteger;
 import java.text.MessageFormat;
@@ -17,7 +18,7 @@ public class InsertRequestBuilder<T extends BaseEntity> {
         List<String> statements = new ArrayList<>();
         List<Attr> attributes = Processor.getAttributes(object.getClass());
 
-        statements.add(MessageFormat.format(PreparedRequests.INSERT_OBJECTS.getRequest(), object.getId(),
+        statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_OBJECTS.getRequest(), object.getId(),
                 null,
                 Processor.getObjtypeId(object.getClass()),
                 object.getName() == null ? null : "'" + object.getName() + "'",
@@ -32,7 +33,7 @@ public class InsertRequestBuilder<T extends BaseEntity> {
 
             switch (attr.valueType) {
                 case DATE_VALUE:
-                    statements.add(MessageFormat.format(PreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                    statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
                             attr.id,
                             object.getId(),
                             null,
@@ -40,7 +41,7 @@ public class InsertRequestBuilder<T extends BaseEntity> {
                             null));
                     continue;
                 case LIST_VALUE:
-                    statements.add(MessageFormat.format(PreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                    statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
                             attr.id,
                             object.getId(),
                             null,
@@ -48,13 +49,13 @@ public class InsertRequestBuilder<T extends BaseEntity> {
                             ListValues.getListValueIdByValue(value.toString())));
                     continue;
                 case REF_VALUE:
-                    statements.add(MessageFormat.format(PreparedRequests.INSERT_REFERENCES.getRequest(),
+                    statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_REFERENCES.getRequest(),
                             attr.id,
                             ((BaseEntity) value).getId(),
                             object.getId()));
                     continue;
                 case VALUE:
-                    statements.add(MessageFormat.format(PreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                    statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
                             attr.id,
                             object.getId(),
                             value.toString() == null ? null : "'" + value.toString() + "'",
