@@ -1,5 +1,6 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
+import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.PartsOfRequests;
 import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
@@ -38,13 +39,8 @@ public class RequestWithPaging extends RequestBuilder {
     public void buildFilterBlock() {
         super.buildFilterBlock();
 
-        Pageable pageable = null;
-        if (!params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            pageable = PageRequest.of(0, new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
-        }
-        if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            pageable = PageRequest.of(new Integer(params.get(PagingAndSortingParams.PAGE.getParameterName())), new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
-        }
+        Pageable pageable = PaginationCriteria.getPagination(params);
+
         //TODO: попробовать переделать расчет
         request.setFilterBlock(new StringBuilder(
                 request.getFilterBlock() +

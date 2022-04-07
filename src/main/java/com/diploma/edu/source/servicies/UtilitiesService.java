@@ -25,6 +25,7 @@ public class UtilitiesService implements Service<Utility> {
 
     @Override
     public boolean create(Utility object) {
+        UtilitiesCalculator.calculateUtility(object);
         if (oracleDbAccess.insert(object) == 1) {
             return false;
         } else {
@@ -43,6 +44,7 @@ public class UtilitiesService implements Service<Utility> {
 
     @Override
     public boolean update(Utility object) {
+        UtilitiesCalculator.calculateUtility(object);
         if (oracleDbAccess.update(object) == 1) {
             return false;
         } else {

@@ -1,7 +1,6 @@
 package com.diploma.edu.source.servicies.requestBuilder.requestParams;
 
 public enum RequestParams {
-
     DATE("dateAndTime", RequestParamDataType.NUM), ID("id", RequestParamDataType.NUM),
     TEXT("text", RequestParamDataType.STRING), DATE_FROM("dateFrom", RequestParamDataType.NUM),
     DATE_TO("dateTo", RequestParamDataType.NUM), APPARTMENT_NUMBER("apartmentNumber", RequestParamDataType.STRING),
@@ -15,7 +14,7 @@ public enum RequestParams {
     ROLE_ID("roleId", RequestParamDataType.NUM), VALUE("value", RequestParamDataType.STRING),
     EMAIL("email", RequestParamDataType.STRING), FIRST_NAME("firstName", RequestParamDataType.STRING),
     LAST_NAME("lastName", RequestParamDataType.STRING), PATRONYMIC("patronymic", RequestParamDataType.STRING),
-    ADDRESS("address", RequestParamDataType.STRING),
+    ADDRESS("address", RequestParamDataType.NUM),
     RECEIVE_UTILITY_NOTIFICATION("receiveUtilityNotification", RequestParamDataType.BOOLEAN),
     BANK_BOOK("bankBook", RequestParamDataType.NUM), CURRENT_MONTH_READING("currentMonthReading", RequestParamDataType.NUM),
     LAST_MONTH_READING("lastMonthReading", RequestParamDataType.NUM), SERVICE("service", RequestParamDataType.NUM);

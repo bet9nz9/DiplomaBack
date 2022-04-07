@@ -1,10 +1,13 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
+import com.diploma.edu.source.exceptions.ResourceNotFoundException;
+import com.diploma.edu.source.model.ServiceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 @org.springframework.stereotype.Service
@@ -24,6 +27,7 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
 
     @Override
     public boolean create(com.diploma.edu.source.model.Service object) {
+        checkIsUtilityUnique(object);
         if (oracleDbAccess.insert(object) == 1) {
             return false;
         } else {
@@ -53,4 +57,22 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
     public Page<com.diploma.edu.source.model.Service> getAll(Map<String, String> params) {
         return oracleDbAccess.selectPage(com.diploma.edu.source.model.Service.class, params);
     }
+
+    public Page<ServiceType> getServicesTypes(Map<String, String> params) {
+        return oracleDbAccess.selectPage(ServiceType.class, params);
+    }
+
+    private void checkIsUtilityUnique(com.diploma.edu.source.model.Service service){
+        Map<String, String> params = new HashMap<>();
+        params.put("address", service.getAddress().getId().toString());
+        params.put("serviceType", service.getServiceType().getId().toString());
+
+        Page<com.diploma.edu.source.model.Service> page = oracleDbAccess.selectPage(com.diploma.edu.source.model.Service.class, params);
+
+        if (!page.getContent().isEmpty()){
+            throw new ResourceNotFoundException("Данный тип коммунальной услуги уже сужествует для этого адреса!");
+        }
+
+    }
+
 }

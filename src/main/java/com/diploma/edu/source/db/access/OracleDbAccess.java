@@ -5,6 +5,7 @@ import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
 import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.servicies.requestBuilder.*;
+import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.mappers.*;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.DeletePreparedRequests;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.SelectPreparedRequests;
@@ -92,16 +93,8 @@ public class OracleDbAccess implements DbAccess {
      */
     @Override
     public <T extends BaseEntity> Page<T> selectPage(Class<T> clazz, Map<String, String> params) {
-        logger.log(Level.INFO, "Request parameters: \n" +
-                params.toString());
 
-        Pageable pageable = null;
-        if (!params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            pageable = PageRequest.of(0, new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
-        }
-        if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            pageable = PageRequest.of(new Integer(params.get(PagingAndSortingParams.PAGE.getParameterName())), new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
-        }
+        Pageable pageable = PaginationCriteria.getPagination(params);
 
         List<T> resultElements = selectAll(clazz, Director.valueOf(clazz).
                 getRequest(params).

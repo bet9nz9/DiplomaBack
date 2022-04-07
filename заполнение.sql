@@ -39,7 +39,10 @@ INSERT INTO objtype(OBJECT_TYPE_ID,CODE)
 VALUES (OBJTYPE_SEQ.nextval, 'Category');  		  --13
 
 INSERT INTO objtype(OBJECT_TYPE_ID,CODE)
-VALUES (OBJTYPE_SEQ.nextval, 'Services');  		  --14
+VALUES (OBJTYPE_SEQ.nextval, 'Service');  		  --14
+
+INSERT INTO objtype(OBJECT_TYPE_ID,CODE)
+VALUES (OBJTYPE_SEQ.nextval, 'ServiceType');  		  --15
 
 ---------------------------------Attrtype Logger-------------------------------------------
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
@@ -159,9 +162,6 @@ VALUES (36, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'AD'), 'createdBy')
 
 --------------------------------Attrtype Utility------------------------------------------
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
-VALUES (37, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'bank_book');
-
-INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
 VALUES (38, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'month_and_year');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
@@ -171,7 +171,7 @@ INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
 VALUES (47, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'last_month_read');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
-VALUES (40, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'ammount_to_pay');
+VALUES (40, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'amount_to_pay');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
 VALUES (41, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'status');
@@ -180,7 +180,7 @@ INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
 VALUES (42, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), 'photo_url');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
-VALUES (43, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Services'), 'service_id');
+VALUES (43, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), 'service_id');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
 VALUES (18, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Utility'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Address'), 'adress_id');
@@ -191,10 +191,19 @@ VALUES (44, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Category'), 'impor
 
 --------------------------------Attrtype Services-----------------------------------------
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
-VALUES (45, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Services'), 'title');
+VALUES (37, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), 'bank_book');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
-VALUES (46, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Services'), 'tariff');
+VALUES (45, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), 'title');
+
+INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
+VALUES (46, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), 'tariff');
+
+INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
+VALUES (52, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'ServiceType'), 'service_type');
+
+INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
+VALUES (53, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Service'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Address'), 'ref_address');
 
 --------------------------------Objects---------------------------------------------------
 -- List values
@@ -331,5 +340,21 @@ insert into OBJREFERENCE(attr_id, reference, object_id) VALUES
 
 insert into OBJREFERENCE(attr_id, reference, object_id) VALUES
 (36, (select OBJECT_ID from OBJECTS where NAME = 'Admin' and object_type_id = 8), OBJECTS_SEQ.currval);
+
+/*Категории комуналки*/
+INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION)
+VALUES (OBJECTS_SEQ.nextval, null, (SELECT OBJECT_TYPE_ID FROM OBJTYPE WHERE CODE = 'ServiceType'), 'Интернет', 'Интернет');
+
+INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION)
+VALUES (OBJECTS_SEQ.nextval, null, (SELECT OBJECT_TYPE_ID FROM OBJTYPE WHERE CODE = 'ServiceType'), 'Вода', 'Вода');
+
+INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION)
+VALUES (OBJECTS_SEQ.nextval, null, (SELECT OBJECT_TYPE_ID FROM OBJTYPE WHERE CODE = 'ServiceType'), 'Электричество', 'Электричество');
+
+INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION)
+VALUES (OBJECTS_SEQ.nextval, null, (SELECT OBJECT_TYPE_ID FROM OBJTYPE WHERE CODE = 'ServiceType'), 'Газ', 'Газ');
+
+INSERT INTO OBJECTS(OBJECT_ID, PARENT_ID, OBJECT_TYPE_ID, NAME, DESCRIPTION)
+VALUES (OBJECTS_SEQ.nextval, null, (SELECT OBJECT_TYPE_ID FROM OBJTYPE WHERE CODE = 'ServiceType'), 'ОСМД', 'ОСМД');
 
 commit;

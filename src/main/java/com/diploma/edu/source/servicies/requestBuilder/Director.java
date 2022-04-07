@@ -1,6 +1,6 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
-import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
+import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.data.domain.Pageable;
@@ -53,10 +53,10 @@ public class Director {
 
     public Request getRequest(Map<String, String> params) {
 
-        if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) || params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            setBuilder(new RequestWithPaging(request, params));
-        } else {
+        if (PaginationCriteria.getPagination(params) == null){
             setBuilder(new RequestWithoutPaging(request, params));
+        } else {
+            setBuilder(new RequestWithPaging(request, params));
         }
 
         builder.buildSelectBlock();
@@ -64,8 +64,6 @@ public class Director {
         builder.buildSortBlock();
         return builder.getRequest();
     }
-
-
 
     public Request getRequest(RequestBuilder builder) {
         setBuilder(builder);

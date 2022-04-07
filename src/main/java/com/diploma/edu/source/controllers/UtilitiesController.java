@@ -1,6 +1,7 @@
 package com.diploma.edu.source.controllers;
 
 import com.diploma.edu.source.model.Service;
+import com.diploma.edu.source.model.ServiceType;
 import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.servicies.ServicesService;
 import com.diploma.edu.source.servicies.UtilitiesService;
@@ -40,9 +41,29 @@ public class UtilitiesController {
         return service.getById(utilityID);
     }
 
+    @GetMapping("/userServices")
+    public Page<Service> getServices(@RequestParam Map<String, String> params) {
+        return servicesService.getAll(params);
+    }
+
+    @PostMapping("/createUserService")
+    public boolean createUserService(@RequestBody Service service){
+        return servicesService.create(service);
+    }
+
+    @DeleteMapping("/userServices/{id}")
+    public boolean deleteUserService(@PathVariable("id") BigInteger id){
+        return servicesService.delete(id);
+    }
+
+    @PutMapping("/userServices/update")
+    public boolean updateUserService(@RequestBody Service service){
+        return servicesService.update(service);
+    }
+
     @GetMapping("/services")
-    public Page<Service> getServices() {
-        return servicesService.getAll(null);
+    public Page<ServiceType> getServicesTypes(@RequestParam Map<String, String> params) {
+        return servicesService.getServicesTypes(params);
     }
 
     @PostMapping("/add")
@@ -57,10 +78,7 @@ public class UtilitiesController {
             Utility utilityFromDB = service.getById(utility.getId());
             if (utility.getEndMonthReading() != null) {
                 if (utility.getEndMonthReading().intValue() > utilityFromDB.getStartMonthReading().intValue()) {
-                    utility.setAmountToPay(
-                            (utility.getEndMonthReading().intValue() - utility.getStartMonthReading().intValue())
-                                    * utility.getService().getTariff()
-                    );
+                    utility.calculateAmountToPay();
                     utility.setStatus(true);
                     /**
                      * Создание новой записи, при условии, что происходит внесение новых записей
@@ -74,7 +92,7 @@ public class UtilitiesController {
 
                 }
             }
-        }
+        } //TODO: пробросить ошибку
 
         return service.update(utility);
     }

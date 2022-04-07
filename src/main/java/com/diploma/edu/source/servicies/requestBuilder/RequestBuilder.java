@@ -67,8 +67,6 @@ public abstract class RequestBuilder {
         }
     }
 
-    ;
-
     public void buildSortBlock() {
         if (params.containsKey(PagingAndSortingParams.SORT.getParameterName())) {
 

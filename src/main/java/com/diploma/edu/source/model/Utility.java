@@ -11,9 +11,6 @@ import java.util.Date;
 @ObjectType(id = 12)
 public class Utility extends BaseEntity{
 
-    @Attribute(id = 37, valueType = ValueType.VALUE)
-    private String bankBook;
-
     @Attribute(id = 38, valueType = ValueType.DATE_VALUE)
     private Date dateAndTime;
 
@@ -24,7 +21,7 @@ public class Utility extends BaseEntity{
     private BigInteger endMonthReading;
 
     @Attribute(id = 40, valueType = ValueType.VALUE)
-    private Float amountToPay;
+    private BigDecimal amountToPay;
 
     @Attribute(id = 41, valueType = ValueType.LIST_VALUE)
     private Boolean status;
@@ -37,14 +34,6 @@ public class Utility extends BaseEntity{
 
     @Attribute(id = 18, clazz = Address.class)
     private Address address;
-
-    public String getBankBook() {
-        return bankBook;
-    }
-
-    public void setBankBook(String bankBook) {
-        this.bankBook = bankBook;
-    }
 
     public Date getDateAndTime() {
         return dateAndTime;
@@ -62,11 +51,19 @@ public class Utility extends BaseEntity{
         this.endMonthReading = endMonthReading;
     }
 
-    public Float getAmountToPay() {
+    public BigDecimal getAmountToPay() {
         return amountToPay;
     }
 
-    public void setAmountToPay(Float amountToPay) {
+    public void calculateAmountToPay() {
+        BigInteger startMonthReadings = this.getStartMonthReading();
+        BigInteger endMonthReadings = this.getEndMonthReading();
+        BigDecimal tariff = this.getService().getTariff();
+
+        this.amountToPay = tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings)));
+    }
+
+    public void setAmountToPay(BigDecimal amountToPay) {
         this.amountToPay = amountToPay;
     }
 

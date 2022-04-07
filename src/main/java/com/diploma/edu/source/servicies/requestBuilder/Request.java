@@ -18,7 +18,7 @@ public class Request {
     StringBuilder fromBlock = new StringBuilder("\nFROM OBJECTS o \n");
     StringBuilder whereBlock;
     StringBuilder filterBlock = new StringBuilder(") WHERE 1=1");
-
+    //TODO: заменить за использование меседжформаттер
     public Request(Class clazz) {
         whereBlock = new StringBuilder("WHERE o.object_type_id = " + Processor.getObjtypeId(clazz) + "\n");
         attributes = Processor.getAttributes(clazz);
