@@ -3,6 +3,7 @@ package com.diploma.edu.source.db.access;
 import com.diploma.edu.source.db.annotations.Attr;
 import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
+import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.servicies.requestBuilder.*;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
@@ -47,10 +48,13 @@ public class OracleDbAccess implements DbAccess {
 
         T objectFromDataBase = (T) getById(obj.getClass(), obj.getId());
         List<String> statements = new UpdateRequestBuilder<T>().getUpdateStatements(objectFromDataBase, obj);
+        if (statements.isEmpty()){
+            throw new ResourceNotFoundException("Нет изменений!");
+        }
 
         String[] str = new String[0];
         logger.log(Level.INFO, "Update statements: " + statements);
-        //TODO: пробрасывать ошибку, что изменений нет
+
         jdbcTemplate.batchUpdate(statements.toArray(str));
         return 0;
     }

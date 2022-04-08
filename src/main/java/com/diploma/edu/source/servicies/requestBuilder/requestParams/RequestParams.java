@@ -17,7 +17,8 @@ public enum RequestParams {
     ADDRESS("address", RequestParamDataType.NUM),
     RECEIVE_UTILITY_NOTIFICATION("receiveUtilityNotification", RequestParamDataType.BOOLEAN),
     BANK_BOOK("bankBook", RequestParamDataType.NUM), CURRENT_MONTH_READING("currentMonthReading", RequestParamDataType.NUM),
-    LAST_MONTH_READING("lastMonthReading", RequestParamDataType.NUM), SERVICE("service", RequestParamDataType.NUM);
+    LAST_MONTH_READING("lastMonthReading", RequestParamDataType.NUM), SERVICE("service", RequestParamDataType.NUM),
+    SERVICE_TYPE("serviceType", RequestParamDataType.NUM);
 
     private final String requestParam;
     private final RequestParamDataType dataType;

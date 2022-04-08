@@ -3,9 +3,11 @@ package com.diploma.edu.source.model;
 import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
+import com.diploma.edu.source.servicies.UtilitiesCalculator;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 
 @ObjectType(id = 12)
@@ -61,6 +63,7 @@ public class Utility extends BaseEntity{
         BigDecimal tariff = this.getService().getTariff();
 
         this.amountToPay = tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings)));
+        this.setStatus(true);
     }
 
     public void setAmountToPay(BigDecimal amountToPay) {
@@ -105,5 +108,30 @@ public class Utility extends BaseEntity{
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Utility copy(){
+        Utility newUtility = new Utility();
+
+        newUtility.setId(this.getId());
+        newUtility.setName(this.getName());
+        newUtility.setDescription(this.getDescription());
+        newUtility.setDateAndTime(monthIncrement(this.getDateAndTime()));
+        newUtility.setStartMonthReading(this.getStartMonthReading());
+        newUtility.setEndMonthReading(this.getEndMonthReading());
+        newUtility.setAmountToPay(new BigDecimal(0L));
+        newUtility.setStatus(false);
+        newUtility.setPhotoURL(null);
+        newUtility.setService(this.getService());
+        newUtility.setAddress(this.getAddress());
+
+        return newUtility;
+    }
+
+    private Date monthIncrement(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, 1);
+        return calendar.getTime();
     }
 }

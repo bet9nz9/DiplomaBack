@@ -1,9 +1,11 @@
 package com.diploma.edu.source.controllers;
 
+import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Service;
 import com.diploma.edu.source.model.ServiceType;
 import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.servicies.ServicesService;
+import com.diploma.edu.source.servicies.UtilitiesCalculator;
 import com.diploma.edu.source.servicies.UtilitiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,27 +75,15 @@ public class UtilitiesController {
 
     @PutMapping
     public boolean updateUtility(@RequestBody Utility utility) {
-        //TODO: заменить проверку и расчет
-        if (utility.getEndMonthReading() == null || utility.getStartMonthReading() == null) {
-            Utility utilityFromDB = service.getById(utility.getId());
-            if (utility.getEndMonthReading() != null) {
-                if (utility.getEndMonthReading().intValue() > utilityFromDB.getStartMonthReading().intValue()) {
-                    utility.calculateAmountToPay();
-                    utility.setStatus(true);
-                    /**
-                     * Создание новой записи, при условии, что происходит внесение новых записей
-                     * */
-                    Utility newUtility = new Utility();
-                    newUtility.setDateAndTime(monthIncrement(utility.getDateAndTime()));
-                    newUtility.setStartMonthReading(utility.getEndMonthReading());
-                    newUtility.setService(utility.getService());
-                    newUtility.setStatus(false);
-                    service.create(newUtility);
-
-                }
-            }
-        } //TODO: пробросить ошибку
-
+        if (utility.getEndMonthReading() != null || utility.getStartMonthReading() != null){
+            Utility newUtility = utility.copy();
+            utility.calculateAmountToPay();
+            newUtility.setEndMonthReading(null);
+            newUtility.setStartMonthReading(utility.getEndMonthReading());
+            service.create(newUtility);
+        } else {
+            throw new ResourceNotFoundException("Показания в начале месяца или в конце несяца не предоставлены!");
+        }
         return service.update(utility);
     }
 

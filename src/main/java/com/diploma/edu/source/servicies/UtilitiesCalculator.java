@@ -1,5 +1,6 @@
 package com.diploma.edu.source.servicies;
 
+import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Utility;
 
 import java.math.BigDecimal;
@@ -27,14 +28,18 @@ public final class UtilitiesCalculator {
         BigInteger endMonthReadings = utility.getEndMonthReading();
         BigDecimal tariff = utility.getService().getTariff();
 
-        if (startMonthReadings == null){
-            startMonthReadings = new BigInteger("0");
-        }
-        if (endMonthReadings.compareTo(startMonthReadings) != 1){
-            //TODO: выбросить ошибку, что значения неправильные
-        }
+        if (endMonthReadings == null){
+            utility.setAmountToPay(new BigDecimal(0L));
+        } else {
+            if (startMonthReadings == null){
+                startMonthReadings = new BigInteger("0");
+            }
+            if (endMonthReadings.compareTo(startMonthReadings) != 1){
+                throw new ResourceNotFoundException("Показания в конце месяца долны быть больше показаний в начале месяца!");
+            }
 
-        utility.setAmountToPay(tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings))));
+            utility.setAmountToPay(tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings))));
+        }
     }
 
     protected enum UtilitiesWithoutReadings{

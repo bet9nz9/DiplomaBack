@@ -48,25 +48,52 @@ public class UpdateRequestBuilder<T extends BaseEntity> {
                         }
                         continue;
                     case LIST_VALUE:
-                        statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                attr.valueType.getValueType(),
-                                ListValues.getListValueIdByValue(newValue.toString()),
-                                attr.id,
-                                oldObject.getId()));
+                        if (oldValue == null) {
+                            statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                                    attr.id,
+                                    oldObject.getId(),
+                                    null,
+                                    null,
+                                    ListValues.getListValueIdByValue(newValue.toString())));
+                        } else {
+                            statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
+                                    attr.valueType.getValueType(),
+                                    ListValues.getListValueIdByValue(newValue.toString()),
+                                    attr.id,
+                                    oldObject.getId()));
+                        }
                         continue;
                     case DATE_VALUE:
-                        statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                attr.valueType.getValueType(),
-                                BigInteger.valueOf(((Date) newValue).getTime()).toString(),
-                                attr.id,
-                                oldObject.getId()));
+                        if (oldValue == null){
+                            statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                                    attr.id,
+                                    oldObject.getId(),
+                                    null,
+                                    BigInteger.valueOf(((Date) newValue).getTime()).toString(),
+                                    null));
+                        } else {
+                            statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
+                                    attr.valueType.getValueType(),
+                                    BigInteger.valueOf(((Date) newValue).getTime()).toString(),
+                                    attr.id,
+                                    oldObject.getId()));
+                        }
                         continue;
                     case VALUE:
-                        statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                attr.valueType.getValueType(),
-                                newValue == null ? null : "'" + newValue + "'",
-                                attr.id,
-                                oldObject.getId()));
+                        if (oldValue == null){
+                            statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
+                                    attr.id,
+                                    oldObject.getId(),
+                                    newValue.toString(),
+                                    null,
+                                    null ));
+                        } else {
+                            statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
+                                    attr.valueType.getValueType(),
+                                    newValue == null ? null : "'" + newValue + "'",
+                                    attr.id,
+                                    oldObject.getId()));
+                        }
                         continue;
                 }
             }
