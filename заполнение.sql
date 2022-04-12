@@ -62,7 +62,7 @@ INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
 VALUES (5, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), 'type_id');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
-VALUES (6, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), 'is_active');
+VALUES (6, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), 'entrance_status');
 
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
 VALUES (7, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Building'), 'building_id');

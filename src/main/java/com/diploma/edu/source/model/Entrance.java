@@ -14,9 +14,6 @@ public class Entrance extends BaseEntity {
     protected Building building;
 
     @Attribute(id = 6, valueType = ValueType.LIST_VALUE)
-    protected Boolean isActive;
-
-    @Attribute(id = 50, valueType = ValueType.LIST_VALUE)
     protected Boolean status;
 
     public Boolean getStatus() {
@@ -41,13 +38,5 @@ public class Entrance extends BaseEntity {
 
     public void setBuilding(Building building) {
         this.building = building;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
     }
 }
