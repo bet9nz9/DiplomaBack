@@ -2,8 +2,8 @@ package com.diploma.edu.source.servicies.requestBuilder.requestParams;
 
 public enum RequestParams {
     DATE("dateAndTime", RequestParamDataType.NUM), ID("id", RequestParamDataType.NUM),
-    TEXT("text", RequestParamDataType.STRING), DATE_FROM("dateFrom", RequestParamDataType.NUM),
-    DATE_TO("dateTo", RequestParamDataType.NUM), APPARTMENT_NUMBER("apartmentNumber", RequestParamDataType.STRING),
+    TEXT("text", RequestParamDataType.STRING), DATE_FROM("dateFrom", RequestParamDataType.DATE),
+    DATE_TO("dateTo", RequestParamDataType.DATE), APPARTMENT_NUMBER("apartmentNumber", RequestParamDataType.STRING),
     NAME("name", RequestParamDataType.STRING), TITLE("title", RequestParamDataType.STRING),
     CATEGORY_ID("category", RequestParamDataType.NUM),
     CREATED_BY("createdBy", RequestParamDataType.NUM), FLAT("flat", RequestParamDataType.NUM),

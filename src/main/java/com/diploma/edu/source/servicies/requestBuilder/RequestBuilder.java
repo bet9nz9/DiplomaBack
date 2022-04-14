@@ -58,6 +58,16 @@ public abstract class RequestBuilder {
                                     param.getRequestParam(),
                                     ListValues.getListValueIdByValue(params.get(param.getRequestParam())))
                     );
+                } else if (param.getDataType().equals(RequestParamDataType.DATE)) {
+                    if (param.getRequestParam().equals(RequestParams.DATE_TO.getRequestParam())){
+                        request.filterBlock.append(MessageFormat.format(PartsOfRequests.FILTER_DATE_TO_BLOCK.getRequestPart(),
+                                RequestParams.DATE.getRequestParam(),
+                                params.get(param.getRequestParam())));
+                    } else {
+                        request.filterBlock.append(MessageFormat.format(PartsOfRequests.FILTER_DATE_FROM_BLOCK.getRequestPart(),
+                                RequestParams.DATE.getRequestParam(),
+                                params.get(param.getRequestParam())));
+                    }
                 } else {
                     request.filterBlock.append(MessageFormat.format(PartsOfRequests.FILTER_STRING_BLOCK.getRequestPart(),
                             param.getRequestParam(),

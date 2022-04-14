@@ -8,7 +8,6 @@ import java.util.Date;
 
 @ObjectType(id = 1)
 public class Logger extends BaseEntity {
-/*	protected Long logger_id;*/
 
 	@Attribute(id = 1,clazz = Entrance.class)
 	protected Entrance entrance;
@@ -19,22 +18,22 @@ public class Logger extends BaseEntity {
 	@Attribute(id = 3, valueType = ValueType.DATE_VALUE)
 	protected Date dateAndTime;
 
-	@Attribute(id = 4, valueType = ValueType.DATE_VALUE)
-	protected String time;
+	@Attribute(id = 4, valueType = ValueType.VALUE)
+	protected String message;
 
-	public Entrance getEntranceId() {
+	public Entrance getEntrance() {
 		return entrance;
 	}
 
-	public void setEntranceId(Entrance entrance) {
+	public void setEntrance(Entrance entrance) {
 		this.entrance = entrance;
 	}
 
-	public Ekey geteKeyId() {
+	public Ekey geteKey() {
 		return eKey;
 	}
 
-	public void seteKeyId(Ekey eKey) {
+	public void seteKey(Ekey eKey) {
 		this.eKey = eKey;
 	}
 
@@ -46,11 +45,11 @@ public class Logger extends BaseEntity {
 		this.dateAndTime = dateAndTime;
 	}
 
-	public String getTime() {
-		return time;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setTime(String time) {
-		this.time = time;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 }

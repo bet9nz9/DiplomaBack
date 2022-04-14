@@ -33,40 +33,56 @@ public class ExportPDFService {
         Font font = FontFactory.getFont(FontFactory.HELVETICA);
         font.setColor(Color.BLACK);
 
+        cell.setPhrase(new Phrase("UserId",font));
+        table.addCell(cell);
+
         cell.setPhrase(new Phrase("User",font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("Key",font));
+        cell.setPhrase(new Phrase("KeyId",font));
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("Key Code",font));
+        table.addCell(cell);
+
+        cell.setPhrase(new Phrase("EntranceId",font));
         table.addCell(cell);
 
         cell.setPhrase(new Phrase("Entrance",font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("Date",font));
+        cell.setPhrase(new Phrase("Date and Time",font));
         table.addCell(cell);
 
-        cell.setPhrase(new Phrase("Time",font));
+        cell.setPhrase(new Phrase("Message", font));
         table.addCell(cell);
 
     }
 
     private void writeTableData(PdfPTable table){
         for(Logger logger : loggerList){
-            table.addCell(logger.geteKeyId().getReferencedUser().getPatronymic());
-            table.addCell(logger.geteKeyId().getKeyCode());
-            table.addCell(logger.getEntranceId().getName());
 
-            Date date = logger.getDateAndTime();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, y", Locale.ENGLISH);
-            DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-            table.addCell(dateFormat.format(date));
-            table.addCell(timeFormat.format(date));
+            if (logger.geteKey() == null){
+                table.addCell("-");
+                table.addCell("-");
+                table.addCell("-");
+                table.addCell("-");
+            } else {
+                table.addCell(logger.geteKey().getReferencedUser().getId().toString());
+                table.addCell(logger.geteKey().getReferencedUser().getLastName());
+                table.addCell(logger.geteKey().getId().toString());
+                table.addCell(logger.geteKey().getKeyCode());
+            }
 
+            table.addCell(logger.getEntrance().getId().toString());
+            table.addCell(logger.getEntrance().getName());
+            table.addCell(logger.getDateAndTime().toString());
+            table.addCell(logger.getMessage());
         }
     }
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
-        Document document = new Document(PageSize.A4);
+        Document document = new Document(PageSize.A3);
 
         PdfWriter.getInstance(document, response.getOutputStream());
 
@@ -79,8 +95,9 @@ public class ExportPDFService {
         Paragraph title = new Paragraph("Logger",font);
         document.add(title);
 
-        PdfPTable table = new PdfPTable(5);
-        table.setWidthPercentage(100);
+        PdfPTable table = new PdfPTable(8);
+        table.setWidths(new float[]{5,5,5,5,5,5,5, 15});
+        //table.setWidthPercentage(100);
         table.setSpacingBefore(15);
 
         writeTableHeader(table);

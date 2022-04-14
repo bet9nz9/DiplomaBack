@@ -4,6 +4,8 @@ public enum PartsOfRequests {
 
     FILTER_NUMBER_BLOCK (" AND {0} = {1}"),
     FILTER_STRING_BLOCK (" AND {0} = ''{1}''"),
+    FILTER_DATE_TO_BLOCK(" AND {0} < {1}"),
+    FILTER_DATE_FROM_BLOCK(" AND {0} > {1}"),
     SORT_BLOCK (" order by {0} {1} "),
     SORT_BLOCK_WITH_PAGING ("select * from (select row_number() over (order by {0} {1}) rowRank, a.* from({2}");
 

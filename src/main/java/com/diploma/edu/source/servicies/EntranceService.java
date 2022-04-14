@@ -1,6 +1,9 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
+import com.diploma.edu.source.entranceInteraction.ActionType;
+import com.diploma.edu.source.entranceInteraction.EntranceActions;
+import com.diploma.edu.source.model.Ekey;
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
@@ -53,6 +56,10 @@ public class EntranceService implements Service<Entrance> {
     @Override
     public Page<Entrance> getAll(Map<String, String> params) {
         return oracleDbAccess.selectPage(Entrance.class, params);
+    }
+
+    public void interactWithEntrance(Map<String, String> params){
+        EntranceActions.interact(params);
     }
 
 }

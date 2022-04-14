@@ -67,6 +67,9 @@ VALUES (6, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), 'entran
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, OBJECT_TYPE_ID_REF, CODE)
 VALUES (7, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Building'), 'building_id');
 
+INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
+VALUES (50, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'Entrance'), 'isEntrance_available');
+
 --------------------------------Attrtype E_key---------------------------------------------
 INSERT INTO attrtype(ATTR_ID, OBJECT_TYPE_ID, CODE)
 VALUES (8, (select OBJECT_TYPE_ID from OBJTYPE where CODE = 'E-key'), 'key');

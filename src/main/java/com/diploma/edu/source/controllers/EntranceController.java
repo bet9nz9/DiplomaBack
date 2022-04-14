@@ -45,21 +45,10 @@ public class EntranceController {
         this.loggerController = loggerController;
     }
 
-    @Autowired
-    private OracleDbAccess oracleDbAccess;
-
-    @GetMapping(value = "/open",
-            params = {"key_id", "entrance_id"})
-    public boolean openGate(@RequestParam("key_id") Long key_id, @RequestParam("entrance_id") Long entrance_id) {
-        //will return isOpened
-        return false;
-    }
-
-    @GetMapping(value = "/block",
-            params = {"key_id", "entrance_id"})
-    public boolean blockGate(@RequestParam("key_id") Long key_id, @RequestParam("entrance_id") Long entrance_id) {
-        //will return isBlock
-        return false;
+    @GetMapping("/interact")
+    public boolean openGate(@RequestParam Map<String, String> params) {
+        service.interactWithEntrance(params);
+        return true;
     }
 
     @PostMapping("/add")
@@ -82,49 +71,9 @@ public class EntranceController {
         return service.getAll(params);
     }
 
-    @GetMapping("/log")
-    public void getLog(@RequestParam("page") int page, @RequestParam("size") int size,
-                       @RequestParam(value = "filter", required = false) String filter,
-                       @RequestParam(value = "sort", required = false) String sort) {
-
-    }
-
     @RequestMapping(value = "/get-one/{id}")
     public Entrance getOne(@PathVariable("id") BigInteger id) {
         return service.getById(id);
-    }
-
-    //TODO: поменять этот метод
-    @GetMapping("/export")
-    public void exportToPDF(HttpServletResponse response,
-                            @RequestParam(value = "dateFrom", required = false) Long dateFrom,
-                            @RequestParam(value = "dateTo", required = false) Long dateTo,
-                            @RequestParam(value = "filter", required = false) String filter) throws DocumentException, IOException {
-
-//        List<SearchCriteria> filters = new ArrayList<>();
-//        if (dateFrom != null) {
-//            filters.add(new SearchCriteria("dateAndTime", " > to_date('" + changeDateFormat(new Date(dateFrom))
-//                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
-//        }
-//        if (dateTo != null) {
-//            filters.add(new SearchCriteria("dateAndTime", " < to_date('" + changeDateFormat(new Date(dateTo))
-//                    + "', 'yyyy-mm-dd hh24:mi:ss')"));
-//        }
-//        response.setContentType("application/pdf");
-//
-//        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
-//        String currentDateTime = dateFormatter.format(new Date());
-//        String headerKey = "Content-Disposition";
-//        String headerValue = "attachment; filename = entrance_" + currentDateTime + ".pdf";
-//
-//        response.setHeader(headerKey, headerValue);
-//
-//        SortCriteria sortCriteria = new SortCriteria("isActive:DESC");
-//        //Page<Logger> pageEntrance = loggerService.getAll(null, filters, null);
-//        //List<Logger> loggerList = pageEntrance.getContent();
-//
-//        ExportPDFService exporter = new ExportPDFService(loggerList);
-//        exporter.export(response);
     }
 
     private String changeDateFormat(Date date) {

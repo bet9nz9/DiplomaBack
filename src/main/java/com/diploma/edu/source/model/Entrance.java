@@ -14,14 +14,17 @@ public class Entrance extends BaseEntity {
     protected Building building;
 
     @Attribute(id = 6, valueType = ValueType.LIST_VALUE)
-    protected Boolean status;
+    protected Boolean isOpen;
 
-    public Boolean getStatus() {
-        return status;
+    @Attribute(id = 50, valueType = ValueType.LIST_VALUE)
+    protected Boolean isAvailable;
+
+    public Boolean getIsOpen() {
+        return isOpen;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setIsOpen(Boolean isOpen) {
+        this.isOpen = isOpen;
     }
 
     public Type getEntranceType() {
@@ -38,5 +41,13 @@ public class Entrance extends BaseEntity {
 
     public void setBuilding(Building building) {
         this.building = building;
+    }
+
+    public Boolean getIsAvailable() {
+        return isAvailable;
+    }
+
+    public void setIsAvailable(Boolean isAvailable) {
+        this.isAvailable = isAvailable;
     }
 }
