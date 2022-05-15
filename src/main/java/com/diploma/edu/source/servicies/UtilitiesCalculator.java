@@ -1,5 +1,6 @@
 package com.diploma.edu.source.servicies;
 
+import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Utility;
 
@@ -35,7 +36,7 @@ public final class UtilitiesCalculator {
                 startMonthReadings = new BigInteger("0");
             }
             if (endMonthReadings.compareTo(startMonthReadings) != 1){
-                throw new ResourceNotFoundException("Показания в конце месяца долны быть больше показаний в начале месяца!");
+                throw new IncorrectDataException("Показания в конце месяца долны быть больше показаний в начале месяца!");
             }
 
             utility.setAmountToPay(tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings))));

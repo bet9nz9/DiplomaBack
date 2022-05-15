@@ -1,11 +1,10 @@
 package com.diploma.edu.source.controllers;
 
-import com.diploma.edu.source.exceptions.ResourceNotFoundException;
+import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.model.Service;
 import com.diploma.edu.source.model.ServiceType;
 import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.servicies.ServicesService;
-import com.diploma.edu.source.servicies.UtilitiesCalculator;
 import com.diploma.edu.source.servicies.UtilitiesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -82,7 +81,7 @@ public class UtilitiesController {
             newUtility.setStartMonthReading(utility.getEndMonthReading());
             service.create(newUtility);
         } else {
-            throw new ResourceNotFoundException("Показания в начале месяца или в конце несяца не предоставлены!");
+            throw new IncorrectDataException("Показания в начале месяца или в конце несяца не предоставлены!");
         }
         return service.update(utility);
     }

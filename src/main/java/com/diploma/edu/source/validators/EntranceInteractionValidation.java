@@ -1,6 +1,8 @@
 package com.diploma.edu.source.validators;
 
 import com.diploma.edu.source.entranceInteraction.ActionType;
+import com.diploma.edu.source.exceptions.IncorrectDataException;
+import com.diploma.edu.source.exceptions.IncorrectStatusException;
 import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.servicies.EntranceService;
@@ -24,11 +26,11 @@ public class EntranceInteractionValidation {
 
     public static void validate(Map<String, String> params){
         if (!params.containsKey("action")){
-            throw new ResourceNotFoundException("Взаимодействие невозможно!");
+            throw new IncorrectDataException("Взаимодействие невозможно!");
         }
 
         if (!params.containsKey("entranceId")){
-            throw new ResourceNotFoundException("Взаимодействие невозможно!");
+            throw new IncorrectDataException("Взаимодействие невозможно!");
         }
 
         entrance = entranceService.getById(new BigInteger(params.get("entranceId")));
@@ -38,7 +40,7 @@ public class EntranceInteractionValidation {
         } else if (params.get("action").equals(ActionType.CLOSE.getAction()) || params.get("action").equals(ActionType.OPEN.getAction())){
             validateOpenCloseInteraction(params);
         } else {
-            throw new ResourceNotFoundException("Взаимодействие неверное!");
+            throw new IncorrectStatusException("Взаимодействие неверное!");
         }
 
     }
@@ -46,21 +48,18 @@ public class EntranceInteractionValidation {
     private static void validateOpenCloseInteraction(Map<String, String> params){
 
         if (!entrance.getIsAvailable()){
-            throw new ResourceNotFoundException("Взаимодействие невозможно, данная дверь/шлагбаум заблокирован!");
+            throw new IncorrectStatusException("Взаимодействие невозможно, данная дверь/шлагбаум заблокирован!");
         }
 
         if (!params.containsKey("ekeyId")){
-            throw new ResourceNotFoundException("Взаимодействие невозможно!");
+            throw new IncorrectDataException("Взаимодействие невозможно!");
         }
     }
 
     private static void validateBlockUnblockInteraction(Map<String, String> params){
-
-        //TODO: check validation
-
         if ((entrance.getIsAvailable() && params.get("action").equals(ActionType.UNBLOCK)) ||
                 (!entrance.getIsAvailable() && params.get("action").equals(ActionType.BLOCK))){
-            throw new ResourceNotFoundException("Взаимодействие невозможно!");
+            throw new IncorrectStatusException("Взаимодействие невозможно!");
         }
     }
 

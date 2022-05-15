@@ -61,8 +61,11 @@ public class Utility extends BaseEntity{
         BigInteger startMonthReadings = this.getStartMonthReading();
         BigInteger endMonthReadings = this.getEndMonthReading();
         BigDecimal tariff = this.getService().getTariff();
-
-        this.amountToPay = tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings)));
+        if (startMonthReadings == null && endMonthReadings == null){
+            this.amountToPay = tariff;
+        } else {
+            this.amountToPay = tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings)));
+        }
         this.setStatus(true);
     }
 

@@ -3,14 +3,13 @@ package com.diploma.edu.source.db.access;
 import com.diploma.edu.source.db.annotations.Attr;
 import com.diploma.edu.source.db.annotations.Processor;
 import com.diploma.edu.source.db.annotations.ValueType;
-import com.diploma.edu.source.exceptions.ResourceNotFoundException;
+import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.servicies.requestBuilder.*;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.mappers.*;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.DeletePreparedRequests;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.SelectPreparedRequests;
-import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
 import lombok.SneakyThrows;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -41,15 +40,10 @@ public class OracleDbAccess implements DbAccess {
     @Override
     @SneakyThrows
     public <T extends BaseEntity> int update(T obj) {
-        BigInteger objId = obj.getId();
-        if (isUnique(objId)) {
-            return -1;
-        }
-
         T objectFromDataBase = (T) getById(obj.getClass(), obj.getId());
         List<String> statements = new UpdateRequestBuilder<T>().getUpdateStatements(objectFromDataBase, obj);
         if (statements.isEmpty()){
-            throw new ResourceNotFoundException("Нет изменений!");
+            throw new IncorrectDataException("Нет изменений!");
         }
 
         String[] str = new String[0];
@@ -63,6 +57,10 @@ public class OracleDbAccess implements DbAccess {
     @SneakyThrows
     public <T extends BaseEntity> int insert(T obj) {
         obj.setId(jdbcTemplate.queryForObject(SelectPreparedRequests.GET_NEW_OBJECT_ID.getRequest(), BigInteger.class));
+
+        if (isUnique(obj.getId())) {
+            return -1;
+        }
 
         List<String> statements = new InsertRequestBuilder<T>().getInsertStatements(obj);
 

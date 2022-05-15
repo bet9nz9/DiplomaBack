@@ -1,6 +1,7 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
+import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.ServiceType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class ServicesService implements Service<com.diploma.edu.source.model.Ser
         Page<com.diploma.edu.source.model.Service> page = oracleDbAccess.selectPage(com.diploma.edu.source.model.Service.class, params);
 
         if (!page.getContent().isEmpty()){
-            throw new ResourceNotFoundException("Данный тип коммунальной услуги уже сужествует для этого адреса!");
+            throw new IncorrectDataException("Данный тип коммунальной услуги уже сужествует для этого адреса!");
         }
 
     }
