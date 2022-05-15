@@ -1,7 +1,6 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.exceptions.IncorrectDataException;
-import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Utility;
 
 import java.math.BigDecimal;

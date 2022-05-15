@@ -3,6 +3,8 @@ package com.diploma.edu.source.model;
 import com.diploma.edu.source.db.annotations.Attribute;
 import com.diploma.edu.source.db.annotations.ObjectType;
 import com.diploma.edu.source.db.annotations.ValueType;
+
+import java.math.BigInteger;
 import java.util.Date;
 
 
@@ -23,6 +25,18 @@ public class Notification extends BaseEntity {
 
     @Attribute(id = 36, clazz = User.class)
     private User createdBy;
+
+    public Notification(BigInteger id, String name, String description, String text, Date dateAndTime, String title, Category category, User createdBy) {
+        super(id, name, description);
+        this.text = text;
+        this.dateAndTime = dateAndTime;
+        this.title = title;
+        this.category = category;
+        this.createdBy = createdBy;
+    }
+
+    public Notification() {
+    }
 
     public String getText() {
         return text;

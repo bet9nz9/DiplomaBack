@@ -8,6 +8,15 @@ public abstract class BaseEntity implements Serializable {
     protected String name;
     protected String description;
 
+    public BaseEntity(BigInteger id, String name, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+    }
+
+    public BaseEntity() {
+    }
+
     public BigInteger getId() {
         return id;
     }

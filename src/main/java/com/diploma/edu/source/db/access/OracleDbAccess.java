@@ -58,7 +58,7 @@ public class OracleDbAccess implements DbAccess {
     public <T extends BaseEntity> int insert(T obj) {
         obj.setId(jdbcTemplate.queryForObject(SelectPreparedRequests.GET_NEW_OBJECT_ID.getRequest(), BigInteger.class));
 
-        if (isUnique(obj.getId())) {
+        if (!isUnique(obj.getId())) {
             return -1;
         }
 

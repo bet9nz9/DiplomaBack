@@ -2,7 +2,6 @@ package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.exceptions.IncorrectDataException;
-import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.ServiceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

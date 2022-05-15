@@ -1,18 +1,12 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
-import com.diploma.edu.source.entranceInteraction.ActionType;
 import com.diploma.edu.source.entranceInteraction.EntranceActions;
-import com.diploma.edu.source.model.Ekey;
 import com.diploma.edu.source.model.Entrance;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
 
 @org.springframework.stereotype.Service

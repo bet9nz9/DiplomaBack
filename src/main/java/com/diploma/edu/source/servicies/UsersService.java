@@ -1,17 +1,13 @@
 package com.diploma.edu.source.servicies;
 
-import com.diploma.edu.source.model.User;
 import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.exceptions.ResourceNotFoundException;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
+import com.diploma.edu.source.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

@@ -1,26 +1,15 @@
 package com.diploma.edu.source.controllers;
 
-import com.diploma.edu.source.db.access.OracleDbAccess;
 import com.diploma.edu.source.model.Entrance;
-import com.diploma.edu.source.model.Logger;
 import com.diploma.edu.source.servicies.EntranceService;
-import com.diploma.edu.source.servicies.ExportPDFService;
 import com.diploma.edu.source.servicies.LoggerService;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
-import com.lowagie.text.DocumentException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**

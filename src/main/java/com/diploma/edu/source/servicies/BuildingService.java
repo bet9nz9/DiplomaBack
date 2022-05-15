@@ -1,14 +1,10 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.db.access.OracleDbAccess;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import com.diploma.edu.source.model.Building;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Map;
 
 @org.springframework.stereotype.Service

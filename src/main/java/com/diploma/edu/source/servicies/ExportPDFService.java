@@ -1,21 +1,16 @@
 package com.diploma.edu.source.servicies;
 
 import com.diploma.edu.source.model.Logger;
-import com.lowagie.text.*;
 import com.lowagie.text.Font;
+import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.awt.*;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class ExportPDFService {
 

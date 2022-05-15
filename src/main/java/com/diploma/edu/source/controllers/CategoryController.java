@@ -43,7 +43,6 @@ public class CategoryController {
     @DeleteMapping("/delete/{id}")
     public boolean deleteCategory(@PathVariable("id") BigInteger categoryId) {
         if (!service.getAllNotesById(categoryId)) {
-            //TODO: пробросить ошибку, что у категории есть референсные нотификации
             return false;
         } else {
             return service.delete(categoryId);

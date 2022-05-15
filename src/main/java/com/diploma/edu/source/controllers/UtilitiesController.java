@@ -86,21 +86,4 @@ public class UtilitiesController {
         return service.update(utility);
     }
 
-    private String changeDateFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
-    }
-
-    private Date monthIncrement(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.MONTH, 1);
-        return calendar.getTime();
-    }
-
-    private String getMonthAndYear(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy MM");
-        return dateFormat.format(date);
-    }
-
 }
