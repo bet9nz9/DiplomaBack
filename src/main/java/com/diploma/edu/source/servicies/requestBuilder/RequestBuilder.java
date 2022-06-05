@@ -10,7 +10,6 @@ import com.diploma.edu.source.servicies.requestBuilder.requestParams.RequestPara
 import org.springframework.data.domain.Pageable;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,23 +21,7 @@ public abstract class RequestBuilder {
     protected Pageable pageable;
     protected Map<String, String> params;
 
-    @Deprecated
-    public RequestBuilder(Request request, List<SearchCriteria> filter, SortCriteria sort, Pageable pageable) {
-        this.request = request;
-        if (filter == null || filter.size() <= 0)
-            this.filter = new ArrayList<>();
-        else this.filter = filter;
-        if (sort != null) {
-            if (sort.getDirection() == null || sort.getProperty() == null) {
-                this.sort = null;
-            } else {
-                this.sort = sort;
-            }
-        }
-        this.pageable = pageable;
-    }
-
-    public RequestBuilder(Request request, Map<String, String> params) {
+    protected RequestBuilder(Request request, Map<String, String> params) {
         this.request = request;
         this.params = params;
     }

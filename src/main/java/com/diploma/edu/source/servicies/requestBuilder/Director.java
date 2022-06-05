@@ -1,11 +1,8 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
+import com.diploma.edu.source.model.BaseEntity;
 import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
-import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,7 +19,7 @@ public class Director {
     protected RequestBuilder builder;
     protected Request request;
 
-    private Director(Class clazz) {
+    private Director(Class<? extends BaseEntity> clazz) {
         request = new Request(clazz);
     }
 
@@ -30,25 +27,8 @@ public class Director {
         this.builder = builder;
     }
 
-    public static Director valueOf(Class clazz){
-        Director director = new Director(clazz);
-        return director;
-    }
-
-    @Deprecated
-    public Request getRequest(Pageable pageable, List<SearchCriteria> filters, SortCriteria sortCriteria) {
-
-        if (pageable == null) {
-            setBuilder(new RequestWithoutPaging(request, filters, sortCriteria));
-        }
-        else{
-            setBuilder(new RequestWithPaging(request, filters, sortCriteria, pageable));
-        }
-
-        builder.buildSelectBlock();
-        builder.buildFilterBlock();
-        builder.buildSortBlock();
-        return builder.getRequest();
+    public static Director valueOf(Class<? extends BaseEntity> clazz){
+        return new Director(clazz);
     }
 
     public Request getRequest(Map<String, String> params) {

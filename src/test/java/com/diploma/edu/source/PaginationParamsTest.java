@@ -1,7 +1,7 @@
 package com.diploma.edu.source;
 
 import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +30,7 @@ public class PaginationParamsTest {
         Assert.isEquals(expected, actual, "Actual result is not equals to expected.");
     }
 
-    @org.junit.Test(expected = NullPointerException.class)
+    @Test(expected = NullPointerException.class)
     public void nullPaginationTest(){
         Pageable actual = PaginationCriteria.getPagination(paramsNull);
         Assert.assertNull(actual, "Object is null.");

@@ -78,29 +78,31 @@ public class ExportPDFService {
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A3);
+        try{
+            PdfWriter.getInstance(document, response.getOutputStream());
 
-        PdfWriter.getInstance(document, response.getOutputStream());
+            document.open();
 
-        document.open();
+            Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+            font.setColor(Color.BLUE);
+            font.setSize(18);
 
-        Font font = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-        font.setColor(Color.BLUE);
-        font.setSize(18);
+            Paragraph title = new Paragraph("Logger",font);
+            document.add(title);
 
-        Paragraph title = new Paragraph("Logger",font);
-        document.add(title);
+            PdfPTable table = new PdfPTable(8);
+            table.setWidths(new float[]{5,5,5,5,5,5,5, 15});
+            //table.setWidthPercentage(100);
+            table.setSpacingBefore(15);
 
-        PdfPTable table = new PdfPTable(8);
-        table.setWidths(new float[]{5,5,5,5,5,5,5, 15});
-        //table.setWidthPercentage(100);
-        table.setSpacingBefore(15);
+            writeTableHeader(table);
+            writeTableData(table);
 
-        writeTableHeader(table);
-        writeTableData(table);
-
-        document.add(table);
-
-        document.close();
-
+            document.add(table);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        } finally {
+            document.close();
+        }
     }
 }

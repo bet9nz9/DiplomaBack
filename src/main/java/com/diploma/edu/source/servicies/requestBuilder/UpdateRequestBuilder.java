@@ -20,78 +20,78 @@ public class UpdateRequestBuilder<T extends BaseEntity> {
         List<String> statements = new ArrayList<>();
 
         for (Attr attr : attrs) {
-            attr.field.setAccessible(true);
+            attr.getField().setAccessible(true);
 
-            Object oldValue = attr.field.get(oldObject);
-            Object newValue = attr.field.get(newObject);
+            Object oldValue = attr.getField().get(oldObject);
+            Object newValue = attr.getField().get(newObject);
 
             if (!isObjectsEquals(oldValue, newValue)) {
-                switch (attr.valueType) {
+                switch (attr.getValueType()) {
                     case BASE_VALUE:
                         statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_OBJECTS.getRequest(),
-                                attr.valueType.getValueType(),
-                                newValue,
+                                attr.getField().getName(),
+                                newValue instanceof String ? "'" + newValue + "'" : newValue,
                                 oldObject.getId()));
                         continue;
                     case REF_VALUE:
                         if (oldValue == null) {
                             statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_REFERENCES.getRequest(),
-                                    attr.id,
+                                    attr.getId(),
                                     ((BaseEntity) newValue).getId(),
                                     oldObject.getId()));
                         } else {
                             statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_REFERENCES.getRequest(),
-                                    attr.valueType.getValueType(),
-                                    ((BaseEntity) newValue).getId(),
-                                    attr.id,
+                                    attr.getValueType().getValueType(),
+                                    newValue == null ? null : ((BaseEntity) newValue).getId(),
+                                    attr.getId(),
                                     oldObject.getId()));
                         }
                         continue;
                     case LIST_VALUE:
                         if (oldValue == null) {
                             statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                                    attr.id,
+                                    attr.getId(),
                                     oldObject.getId(),
                                     null,
                                     null,
-                                    ListValues.getListValueIdByValue(newValue.toString())));
+                                    ListValues.getListValueIdByValue(newValue == null ? null : newValue.toString())));
                         } else {
                             statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                    attr.valueType.getValueType(),
-                                    ListValues.getListValueIdByValue(newValue.toString()),
-                                    attr.id,
+                                    attr.getValueType().getValueType(),
+                                    ListValues.getListValueIdByValue(newValue == null ? null : newValue.toString()),
+                                    attr.getId(),
                                     oldObject.getId()));
                         }
                         continue;
                     case DATE_VALUE:
-                        if (oldValue == null){
+                        if (oldValue == null) {
                             statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                                    attr.id,
+                                    attr.getId(),
                                     oldObject.getId(),
                                     null,
                                     BigInteger.valueOf(((Date) newValue).getTime()).toString(),
                                     null));
                         } else {
                             statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                    attr.valueType.getValueType(),
+                                    attr.getValueType().getValueType(),
                                     BigInteger.valueOf(((Date) newValue).getTime()).toString(),
-                                    attr.id,
+                                    attr.getId(),
                                     oldObject.getId()));
                         }
                         continue;
                     case VALUE:
-                        if (oldValue == null){
+                        if (oldValue == null) {
                             statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                                    attr.id,
+                                    attr.getId(),
                                     oldObject.getId(),
                                     newValue.toString(),
                                     null,
-                                    null ));
+                                    null));
                         } else {
                             statements.add(MessageFormat.format(UpdatePreparedRequests.UPDATE_ATTRIBUTES.getRequest(),
-                                    attr.valueType.getValueType(),
+                                    attr.getValueType().getValueType(),
                                     newValue == null ? null : "'" + newValue + "'",
-                                    attr.id,
+                                    attr.getId(),
                                     oldObject.getId()));
                         }
                         continue;

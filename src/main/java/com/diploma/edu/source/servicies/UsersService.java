@@ -35,29 +35,17 @@ public class UsersService implements Service<User> {
     public boolean create(User object) {
         object.setRole(roleService.getById(new BigInteger("8")));
         object.setPassword(passwordEncoder.encode(object.getPassword()));
-        if (oracleDbAccess.insert(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(User.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(User.class, id) == 1;
     }
 
     @Override
     public boolean update(User object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

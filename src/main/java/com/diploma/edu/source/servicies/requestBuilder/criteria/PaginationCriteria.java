@@ -13,10 +13,10 @@ public class PaginationCriteria {
             return null;
         }
         if (!params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            return PageRequest.of(0, new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
+            return PageRequest.of(0, Integer.valueOf(params.get(PagingAndSortingParams.SIZE.getParameterName())));
         }
         if (params.containsKey(PagingAndSortingParams.PAGE.getParameterName()) && params.containsKey(PagingAndSortingParams.SIZE.getParameterName())){
-            return PageRequest.of(new Integer(params.get(PagingAndSortingParams.PAGE.getParameterName())), new Integer(params.get(PagingAndSortingParams.SIZE.getParameterName())));
+            return PageRequest.of(Integer.valueOf(params.get(PagingAndSortingParams.PAGE.getParameterName())), Integer.valueOf(params.get(PagingAndSortingParams.SIZE.getParameterName())));
         }
         return null;
     }

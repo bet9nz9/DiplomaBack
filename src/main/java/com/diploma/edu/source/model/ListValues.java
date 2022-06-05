@@ -16,7 +16,7 @@ public enum ListValues {
 
     public static BigInteger getListValueIdByValue(Object value){
         for (ListValues listValue : ListValues.values()){
-            if (value.equals(listValue.value)){
+            if (listValue.value.equals(value)){
                 return listValue.listValueId;
             }
         }

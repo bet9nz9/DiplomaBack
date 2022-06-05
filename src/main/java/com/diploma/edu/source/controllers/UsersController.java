@@ -24,7 +24,6 @@ public class UsersController {
 
     @GetMapping
     public Page<User> getAll(@RequestParam Map<String, String> params) {
-        System.out.println();
         return service.getAll(params);
     }
 

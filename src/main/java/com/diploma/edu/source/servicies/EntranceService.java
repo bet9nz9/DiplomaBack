@@ -22,29 +22,17 @@ public class EntranceService implements Service<Entrance> {
 
     @Override
     public boolean create(Entrance object) {
-        if (oracleDbAccess.insert(object) == 1){
-            return false;
-        }else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Entrance.class, id) == 1){
-            return false;
-        }else{
-            return true;
-        }
+        return oracleDbAccess.delete(Entrance.class, id) == 1;
     }
 
     @Override
     public boolean update(Entrance entrance) {
-        if (oracleDbAccess.update(entrance) == 1){
-            return false;
-        }else {
-            return true;
-        }
+        return oracleDbAccess.update(entrance) == 1;
     }
 
     @Override

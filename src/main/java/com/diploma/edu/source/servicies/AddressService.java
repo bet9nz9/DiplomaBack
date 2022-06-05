@@ -25,29 +25,17 @@ public class AddressService implements Service<Address> {
 
     @Override
     public boolean create(Address object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Address.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Address.class, id) == 1;
     }
 
     @Override
     public boolean update(Address object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

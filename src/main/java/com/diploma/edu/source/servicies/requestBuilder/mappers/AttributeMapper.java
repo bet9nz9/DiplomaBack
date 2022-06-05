@@ -14,13 +14,13 @@ public class AttributeMapper {
 
     public void mapAttribute(Object object, Object value) throws IllegalAccessException {
         if (value == null) {
-            attribute.field.set(object, null);
-        } else if (attribute.field.getType().equals(BigInteger.class)) {
-            attribute.field.set(object, new BigInteger(value.toString()));
-        } else if (attribute.field.getType().equals(BigDecimal.class)) {
-            attribute.field.set(object, new BigDecimal(value.toString()));
+            attribute.getField().set(object, null);
+        } else if (attribute.getField().getType().equals(BigInteger.class)) {
+            attribute.getField().set(object, new BigInteger(value.toString()));
+        } else if (attribute.getField().getType().equals(BigDecimal.class)) {
+            attribute.getField().set(object, new BigDecimal(value.toString()));
         } else {
-            attribute.field.set(object, value);
+            attribute.getField().set(object, value);
         }
     }
 }

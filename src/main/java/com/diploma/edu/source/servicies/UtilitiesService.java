@@ -25,30 +25,18 @@ public class UtilitiesService implements Service<Utility> {
 
     @Override
     public boolean create(Utility object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Utility.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Utility.class, id) == 1;
     }
 
     @Override
     public boolean update(Utility object) {
         UtilitiesCalculator.calculateUtility(object);
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

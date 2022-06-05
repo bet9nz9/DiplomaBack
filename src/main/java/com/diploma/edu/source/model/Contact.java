@@ -37,6 +37,6 @@ public class Contact extends BaseEntity {
     }
 
     public void setReferencedUser(User userId) {
-        this.referencedUser = referencedUser;
+        this.referencedUser = userId;
     }
 }

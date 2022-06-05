@@ -5,7 +5,7 @@ import com.diploma.edu.source.servicies.requestBuilder.CountElementsRequest;
 import com.diploma.edu.source.servicies.requestBuilder.Director;
 import com.diploma.edu.source.servicies.requestBuilder.Request;
 import com.diploma.edu.source.servicies.requestBuilder.RequestGetByID;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +21,7 @@ public class RequestBuilderTest {
     JdbcTemplate jdbcTemplate;
 
     @Test
-    void countRequestTest(){
+    public void countRequestTest(){
         String expectedRequest = "SELECT COUNT(*) FROM ( SELECT o.object_id id,\n" +
                 " o.name name,\n" +
                 " o.description description ,\n" +
@@ -69,7 +69,7 @@ public class RequestBuilderTest {
     }
 
     @Test
-    void buildRequestTest(){
+    public void buildRequestTest(){
         String expectedRequest = "select * from (select row_number() over (order by id ASC) rowRank, a.* from(\n" +
                 "SELECT * FROM ( SELECT o.object_id id,\n" +
                 " o.name name,\n" +
@@ -119,7 +119,7 @@ public class RequestBuilderTest {
     }
 
     @Test
-    void getByIdRequestTest(){
+    public void getByIdRequestTest(){
         final BigInteger id = new BigInteger("5");
         final Class clazz = User.class;
         final String expectedRequest = "\n" +

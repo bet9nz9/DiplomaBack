@@ -1,9 +1,9 @@
 package com.diploma.edu.source.validators;
 
 import com.diploma.edu.source.entranceInteraction.ActionType;
+import com.diploma.edu.source.entranceInteraction.EntranceInteractionParams;
 import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.exceptions.IncorrectStatusException;
-import com.diploma.edu.source.exceptions.ResourceNotFoundException;
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.servicies.EntranceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class EntranceInteractionValidation {
     }
 
     public static void validate(Map<String, String> params){
-        if (!params.containsKey("action")){
+        if (!params.containsKey(EntranceInteractionParams.ACTION.getParam())){
             throw new IncorrectDataException("Взаимодействие невозможно!");
         }
 
@@ -35,9 +35,9 @@ public class EntranceInteractionValidation {
 
         entrance = entranceService.getById(new BigInteger(params.get("entranceId")));
 
-        if (params.get("action").equals(ActionType.BLOCK.getAction()) || params.get("action").equals(ActionType.UNBLOCK.getAction())){
+        if (params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.BLOCK.getAction()) || params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.UNBLOCK.getAction())){
             validateBlockUnblockInteraction(params);
-        } else if (params.get("action").equals(ActionType.CLOSE.getAction()) || params.get("action").equals(ActionType.OPEN.getAction())){
+        } else if (params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.CLOSE.getAction()) || params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.OPEN.getAction())){
             validateOpenCloseInteraction(params);
         } else {
             throw new IncorrectStatusException("Взаимодействие неверное!");
@@ -57,8 +57,8 @@ public class EntranceInteractionValidation {
     }
 
     private static void validateBlockUnblockInteraction(Map<String, String> params){
-        if ((entrance.getIsAvailable() && params.get("action").equals(ActionType.UNBLOCK)) ||
-                (!entrance.getIsAvailable() && params.get("action").equals(ActionType.BLOCK))){
+        if ((entrance.getIsAvailable() && params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.UNBLOCK.getAction())) ||
+                (!entrance.getIsAvailable() && params.get(EntranceInteractionParams.ACTION.getParam()).equals(ActionType.BLOCK.getAction()))){
             throw new IncorrectStatusException("Взаимодействие невозможно!");
         }
     }

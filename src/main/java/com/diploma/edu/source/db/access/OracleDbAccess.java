@@ -48,9 +48,12 @@ public class OracleDbAccess implements DbAccess {
 
         String[] str = new String[0];
         logger.log(Level.INFO, "Update statements: " + statements);
-
-        jdbcTemplate.batchUpdate(statements.toArray(str));
-        return 0;
+        try{
+            jdbcTemplate.batchUpdate(statements.toArray(str));
+            return 1;
+        } catch (RuntimeException e){
+            return 0;
+        }
     }
 
     @Override
@@ -68,8 +71,12 @@ public class OracleDbAccess implements DbAccess {
 
         logger.log(Level.INFO, "Insert statements");
 
-        jdbcTemplate.batchUpdate(statements.toArray(str));
-        return 0;
+        try{
+            jdbcTemplate.batchUpdate(statements.toArray(str));
+            return 1;
+        } catch (RuntimeException e){
+            return 0;
+        }
     }
 
     private boolean isUnique(BigInteger id) {
@@ -117,20 +124,20 @@ public class OracleDbAccess implements DbAccess {
     private <T extends BaseEntity> List<T> selectAll(Class<T> clazz, String request) {
         logger.log(Level.INFO, "Request: " + request);
         List<Attr> attributes = Processor.getAttributes(clazz);
-        List<T> list = jdbcTemplate.query(request, new RowMapper<T>() {
+        return jdbcTemplate.query(request, new RowMapper<T>() {
             @SneakyThrows
             @Override
             public T mapRow(ResultSet rs, int rowNum) throws SQLException {
                 T object = clazz.getDeclaredConstructor().newInstance();
                 for (Attr attr : attributes) {
-                    attr.field.setAccessible(true);
-                    Object value = rs.getObject(attr.field.getName());
-                    if (attr.valueType.equals(ValueType.LIST_VALUE)) {
+                    attr.getField().setAccessible(true);
+                    Object value = rs.getObject(attr.getField().getName());
+                    if (attr.getValueType().equals(ValueType.LIST_VALUE)) {
                         new MapperDirector(new BooleanValueMapper(attr)).mapObjectAttribute(object, getListValueById(value));
-                    } else if (attr.valueType.equals(ValueType.REF_VALUE)) {
-                        BigInteger referencedObjId = getReferencedObjectId(rs.getObject("id"), attr.id);
-                        new MapperDirector(new ReferenceMapper(attr)).mapObjectAttribute(object, getById(attr.clazz, referencedObjId));
-                    } else if (attr.valueType.equals(ValueType.DATE_VALUE)) {
+                    } else if (attr.getValueType().equals(ValueType.REF_VALUE)) {
+                        BigInteger referencedObjId = getReferencedObjectId(rs.getObject("id"), attr.getId());
+                        new MapperDirector(new ReferenceMapper(attr)).mapObjectAttribute(object, getById(attr.getClazz(), referencedObjId));
+                    } else if (attr.getValueType().equals(ValueType.DATE_VALUE)) {
                         new MapperDirector(new DateValueMapper(attr)).mapObjectAttribute(object, value);
                     } else {
                         new MapperDirector(new AttributeMapper(attr)).mapObjectAttribute(object, value);
@@ -139,7 +146,6 @@ public class OracleDbAccess implements DbAccess {
                 return object;
             }
         });
-        return list;
     }
 
     /**

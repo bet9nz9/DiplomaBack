@@ -1,28 +1,19 @@
 package com.diploma.edu.source.servicies.requestBuilder;
 
 import com.diploma.edu.source.servicies.requestBuilder.criteria.PaginationCriteria;
+import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
 import com.diploma.edu.source.servicies.requestBuilder.preparedRequests.PartsOfRequests;
 import com.diploma.edu.source.servicies.requestBuilder.requestParams.PagingAndSortingParams;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SearchCriteria;
-import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.text.MessageFormat;
-import java.util.List;
 import java.util.Map;
 
 public class RequestWithPaging extends RequestBuilder {
 
-    @Deprecated
-    public RequestWithPaging(Request request, List<SearchCriteria> filter, SortCriteria sort, Pageable pageable) {
-        super(request, filter, sort, pageable);
-    }
-
     public RequestWithPaging(Request request, Map<String, String> params) {
         super(request, params);
     }
-
 
     @Override
     public void buildSelectBlock() {

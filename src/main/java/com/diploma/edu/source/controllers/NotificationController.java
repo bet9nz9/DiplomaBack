@@ -9,9 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,18 +55,8 @@ public class NotificationController {
         return service.getById(id);
     }
 
-    @PostMapping("/utility/{utilityNotificationId}/{apartmentId}/{date}")
-    public void postUtilityNotification(Long utilityId, Long utilityNotificationId, Long apartmentId, Date date) {
-
-    }
-
     @RequestMapping(value="/get-users-notes/{id}")
     public Notification getUsersNotes(@PathVariable("id") Long id){
         return null;
-    }
-
-    private String changeDateFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
     }
 }

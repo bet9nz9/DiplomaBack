@@ -23,29 +23,17 @@ public class RoleService implements Service<Role> {
 
     @Override
     public boolean create(Role object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Role.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Role.class, id) == 1;
     }
 
     @Override
     public boolean update(Role object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

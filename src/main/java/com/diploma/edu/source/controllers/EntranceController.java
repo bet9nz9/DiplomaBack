@@ -2,14 +2,10 @@ package com.diploma.edu.source.controllers;
 
 import com.diploma.edu.source.model.Entrance;
 import com.diploma.edu.source.servicies.EntranceService;
-import com.diploma.edu.source.servicies.LoggerService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Map;
 
 /**
@@ -23,15 +19,11 @@ import java.util.Map;
 public class EntranceController {
 
     private final EntranceService service;
-    private final LoggerService loggerService;
-    private final LoggerController loggerController;
 
     private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EntranceController.class.getName());
 
-    public EntranceController(EntranceService service, LoggerService loggerService, LoggerController loggerController) {
+    public EntranceController(EntranceService service) {
         this.service = service;
-        this.loggerService = loggerService;
-        this.loggerController = loggerController;
     }
 
     @GetMapping("/interact")
@@ -63,10 +55,5 @@ public class EntranceController {
     @RequestMapping(value = "/get-one/{id}")
     public Entrance getOne(@PathVariable("id") BigInteger id) {
         return service.getById(id);
-    }
-
-    private String changeDateFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return dateFormat.format(date);
     }
 }

@@ -25,16 +25,16 @@ public class InsertRequestBuilder<T extends BaseEntity> {
                 object.getDescription() == null ? null : "'" + object.getDescription() + "'"));
 
         for (Attr attr : attributes) {
-            attr.field.setAccessible(true);
-            Object value = attr.field.get(object);
+            attr.getField().setAccessible(true);
+            Object value = attr.getField().get(object);
             if (value == null) {
                 continue;
             }
 
-            switch (attr.valueType) {
+            switch (attr.getValueType()) {
                 case DATE_VALUE:
                     statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                            attr.id,
+                            attr.getId(),
                             object.getId(),
                             null,
                             BigInteger.valueOf(((Date) value).getTime()).toString(),
@@ -42,7 +42,7 @@ public class InsertRequestBuilder<T extends BaseEntity> {
                     continue;
                 case LIST_VALUE:
                     statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                            attr.id,
+                            attr.getId(),
                             object.getId(),
                             null,
                             null,
@@ -50,13 +50,13 @@ public class InsertRequestBuilder<T extends BaseEntity> {
                     continue;
                 case REF_VALUE:
                     statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_REFERENCES.getRequest(),
-                            attr.id,
+                            attr.getId(),
                             ((BaseEntity) value).getId(),
                             object.getId()));
                     continue;
                 case VALUE:
                     statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
-                            attr.id,
+                            attr.getId(),
                             object.getId(),
                             value.toString() == null ? null : "'" + value.toString() + "'",
                             null,

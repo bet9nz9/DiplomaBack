@@ -26,29 +26,17 @@ public class TypeService implements Service<Type> {
 
     @Override
     public boolean create(Type object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Type.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Type.class, id) == 1;
     }
 
     @Override
     public boolean update(Type object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

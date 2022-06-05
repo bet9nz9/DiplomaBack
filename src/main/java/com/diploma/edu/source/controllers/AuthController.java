@@ -4,9 +4,9 @@ import com.diploma.edu.source.dto.AuthRequest;
 import com.diploma.edu.source.dto.AuthResponse;
 import com.diploma.edu.source.model.ActivationMessage;
 import com.diploma.edu.source.model.User;
-import com.diploma.edu.source.servicies.UsersService;
 import com.diploma.edu.source.servicies.MailSenderService;
 import com.diploma.edu.source.servicies.TokenService;
+import com.diploma.edu.source.servicies.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +37,7 @@ public class AuthController {
     @PostMapping("/register")
     public boolean registration(@RequestBody User user) {
         try{
-            User checkUser = usersService.findUserByEmail(user.getEmail());
+            usersService.findUserByEmail(user.getEmail());
             return false;
         }catch (IndexOutOfBoundsException e){
             user.setActivationCode(UUID.randomUUID().toString());

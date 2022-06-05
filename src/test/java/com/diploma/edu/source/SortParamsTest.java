@@ -1,7 +1,7 @@
 package com.diploma.edu.source;
 
 import com.diploma.edu.source.servicies.requestBuilder.criteria.SortCriteria;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest

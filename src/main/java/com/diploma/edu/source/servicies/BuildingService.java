@@ -23,29 +23,17 @@ public class BuildingService implements Service<Building> {
 
     @Override
     public boolean create(Building object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Building.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Building.class, id) == 1;
     }
 
     @Override
     public boolean update(Building object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override

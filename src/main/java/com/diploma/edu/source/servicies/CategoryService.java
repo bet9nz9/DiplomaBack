@@ -23,23 +23,17 @@ public class CategoryService implements Service<Category> {
 
     @Override
     public boolean create(Category object) {
-        if(oracleDbAccess.insert(object) ==1)
-            return true;
-        else return false;
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if(oracleDbAccess.delete(Category.class, id) ==1)
-            return true;
-        else return false;
+        return oracleDbAccess.delete(Category.class, id) == 1;
     }
 
     @Override
     public boolean update(Category object) {
-        if(oracleDbAccess.update(object) == 1)
-            return true;
-        else return false;
+        return oracleDbAccess.update(object) == 1;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class CategoryService implements Service<Category> {
         return oracleDbAccess.selectPage(Category.class, params);
     }
 
-    public boolean getAllNotesById(BigInteger id){
+    public boolean getAllNotesById(BigInteger id) {
         return oracleDbAccess.getAllNotesById(id).equals(new BigInteger("0"));
     }
 }

@@ -8,7 +8,7 @@ public class RequestGetByID extends RequestBuilder {
     private BigInteger id;
 
     public RequestGetByID(Request request, BigInteger id) {
-        super(request, null, null, null);
+        super(request, null);
         this.id = id;
     }
 

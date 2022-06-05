@@ -38,7 +38,7 @@ public class EntranceActions {
 
         EntranceInteractionValidation.validate(params);
 
-        String action = params.get("action");
+        String action = params.get(EntranceInteractionParams.ACTION.getParam());
 
         if (action.equals(ActionType.BLOCK.getAction()) || action.equals(ActionType.UNBLOCK.getAction())){
             blockUnblockInteraction(params);
@@ -49,13 +49,13 @@ public class EntranceActions {
 
     private static void blockUnblockInteraction(Map<String, String> params){
         logger = new Logger();
-        Entrance entrance = entranceService.getById(new BigInteger(params.get("entranceId")));
+        Entrance entrance = entranceService.getById(new BigInteger(params.get(EntranceInteractionParams.ENTRANCE_ID.getParam())));
 
         logger.setDateAndTime(new Date());
         logger.setEntrance(entrance);
         logger.setMessage(MessageFormat.format(ActionMessage.BLOCK_UNBLOCK_MESSAGE.getMessage(),
-                params.get("entranceId"),
-                params.get("action")));
+                params.get(EntranceInteractionParams.ENTRANCE_ID.getParam()),
+                params.get(EntranceInteractionParams.ACTION.getParam())));
 
         loggerService.create(logger);
         entrance.setIsAvailable(!entrance.getIsAvailable());
@@ -67,14 +67,14 @@ public class EntranceActions {
 
     private static void openCloseInteraction(Map<String, String> params){
         logger = new Logger();
-        Ekey ekey = ekeyService.getById(new BigInteger(params.get("ekeyId")));
-        Entrance entrance = entranceService.getById(new BigInteger(params.get("entranceId")));
+        Ekey ekey = ekeyService.getById(new BigInteger(params.get(EntranceInteractionParams.EKEY.getParam())));
+        Entrance entrance = entranceService.getById(new BigInteger(params.get(EntranceInteractionParams.ENTRANCE_ID.getParam())));
 
         logger.setDateAndTime(new Date());
         logger.seteKey(ekey);
         logger.setEntrance(entrance);
         logger.setMessage(MessageFormat.format(ActionMessage.OPEN_CLOSE_MESSAGE.getMessage(),
-                params.get("action"),
+                params.get(EntranceInteractionParams.ACTION.getParam()),
                 entrance.getId(),
                 ekey.getId()));
 

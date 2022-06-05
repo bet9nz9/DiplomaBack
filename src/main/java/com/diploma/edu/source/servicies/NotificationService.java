@@ -26,29 +26,17 @@ public class NotificationService implements Service<Notification> {
 
     @Override
     public boolean create(Notification object) {
-        if (oracleDbAccess.insert(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.insert(object) == 1;
     }
 
     @Override
     public boolean delete(BigInteger id) {
-        if (oracleDbAccess.delete(Notification.class, id) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.delete(Notification.class, id) == 1;
     }
 
     @Override
     public boolean update(Notification object) {
-        if (oracleDbAccess.update(object) == 1) {
-            return false;
-        } else {
-            return true;
-        }
+        return oracleDbAccess.update(object) == 1;
     }
 
     public List<String> getAllEmails(){

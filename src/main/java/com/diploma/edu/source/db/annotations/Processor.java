@@ -4,17 +4,18 @@ import com.diploma.edu.source.model.BaseEntity;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Processor {
     public static int getObjtypeId(Class<? extends BaseEntity> clazz) {
         ObjectType ot = clazz.getAnnotation(ObjectType.class);
         if (ot == null) {
-
+            throw new NullPointerException();
         }
         return ot.id();
     }
 
-    public static ArrayList<Attr> getAttributes(Class<? extends BaseEntity> clazz) {
+    public static List<Attr> getAttributes(Class<? extends BaseEntity> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         ArrayList<Attr> attributes = new  ArrayList<>();
         for (int i = 0; i < fields.length; i++) {
