@@ -1,11 +1,12 @@
 package com.diploma.edu.source.controllers;
 
-import com.diploma.edu.source.exceptions.IncorrectDataException;
 import com.diploma.edu.source.model.Service;
 import com.diploma.edu.source.model.ServiceType;
 import com.diploma.edu.source.model.Utility;
 import com.diploma.edu.source.servicies.ServicesService;
+import com.diploma.edu.source.servicies.UtilitiesCalculator;
 import com.diploma.edu.source.servicies.UtilitiesService;
+import com.diploma.edu.source.validators.UtilityReadingsValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -44,17 +45,17 @@ public class UtilitiesController {
     }
 
     @PostMapping("/createUserService")
-    public boolean createUserService(@RequestBody Service service){
+    public boolean createUserService(@RequestBody Service service) {
         return servicesService.create(service);
     }
 
     @DeleteMapping("/userServices/{id}")
-    public boolean deleteUserService(@PathVariable("id") BigInteger id){
+    public boolean deleteUserService(@PathVariable("id") BigInteger id) {
         return servicesService.delete(id);
     }
 
     @PutMapping("/userServices/update")
-    public boolean updateUserService(@RequestBody Service service){
+    public boolean updateUserService(@RequestBody Service service) {
         return servicesService.update(service);
     }
 
@@ -70,16 +71,15 @@ public class UtilitiesController {
 
     @PutMapping
     public boolean updateUtility(@RequestBody Utility utility) {
-        if (utility.getEndMonthReading() != null || utility.getStartMonthReading() != null){
-            Utility newUtility = utility.copy();
-            utility.calculateAmountToPay();
-            newUtility.setEndMonthReading(null);
-            newUtility.setStartMonthReading(utility.getEndMonthReading());
-            service.create(newUtility);
-        } else {
-            throw new IncorrectDataException("Показания в начале месяца или в конце несяца не предоставлены!");
-        }
-        return service.update(utility);
-    }
+        UtilityReadingsValidator.validate(utility);
 
+        Utility newUtility = utility.copy();
+        newUtility.setEndMonthReading(null);
+        newUtility.setStartMonthReading(utility.getEndMonthReading());
+
+        UtilitiesCalculator.calculateUtility(utility);
+
+        service.update(utility);
+        return service.create(newUtility);
+    }
 }

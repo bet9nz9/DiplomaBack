@@ -10,12 +10,12 @@ import java.util.Calendar;
 import java.util.Date;
 
 @ObjectType(id = 12)
-public class Utility extends BaseEntity{
+public class Utility extends BaseEntity {
 
     @Attribute(id = 38, valueType = ValueType.DATE_VALUE)
     private Date dateAndTime;
 
-    @Attribute(id = 47 ,valueType = ValueType.VALUE)
+    @Attribute(id = 47, valueType = ValueType.VALUE)
     private BigInteger startMonthReading;
 
     @Attribute(id = 39, valueType = ValueType.VALUE)
@@ -54,18 +54,6 @@ public class Utility extends BaseEntity{
 
     public BigDecimal getAmountToPay() {
         return amountToPay;
-    }
-
-    public void calculateAmountToPay() {
-        BigInteger startMonthReadings = this.getStartMonthReading();
-        BigInteger endMonthReadings = this.getEndMonthReading();
-        BigDecimal tariff = this.getService().getTariff();
-        if (startMonthReadings == null && endMonthReadings == null){
-            this.amountToPay = tariff;
-        } else {
-            this.amountToPay = tariff.multiply(new BigDecimal(endMonthReadings.subtract(startMonthReadings)));
-        }
-        this.setStatus(true);
     }
 
     public void setAmountToPay(BigDecimal amountToPay) {
@@ -112,11 +100,10 @@ public class Utility extends BaseEntity{
         this.address = address;
     }
 
-    public Utility copy(){
+    public Utility copy() {
         Utility newUtility = new Utility();
 
         newUtility.setId(this.getId());
-        newUtility.setName(this.getName());
         newUtility.setDescription(this.getDescription());
         newUtility.setDateAndTime(monthIncrement(this.getDateAndTime()));
         newUtility.setStartMonthReading(this.getStartMonthReading());

@@ -35,7 +35,6 @@ public class UtilitiesService implements Service<Utility> {
 
     @Override
     public boolean update(Utility object) {
-        UtilitiesCalculator.calculateUtility(object);
         return oracleDbAccess.update(object) == 1;
     }
 
