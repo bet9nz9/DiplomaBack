@@ -84,7 +84,7 @@ public class UpdateRequestBuilder<T extends BaseEntity> {
                             statements.add(MessageFormat.format(InsertPreparedRequests.INSERT_ATTRIBUTES.getRequest(),
                                     attr.getId(),
                                     oldObject.getId(),
-                                    newValue.toString(),
+                                    newValue == null ? null : "'" + newValue + "'",
                                     null,
                                     null));
                         } else {
